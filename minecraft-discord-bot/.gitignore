@@ -1,0 +1,18 @@
+
+# Credenciales
+.env
+.env.*
+
+# Entorno de Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Logs y estado local
+bot.log
+state.json
+
+# Archivos temporales
+*.tmp
+.DS_Store

@@ -1,0 +1,972 @@
+
+import os
+import re
+import json
+import asyncio
+import logging
+import time
+import paramiko
+
+import discord
+from discord import app_commands
+from discord.ext import commands, tasks
+from dotenv import load_dotenv
+from mcstatus import JavaServer
+from mcrcon import MCRcon
+
+load_dotenv()
+
+TOKEN = os.getenv("DISCORD_TOKEN")
+MC_HOST = os.getenv("MINECRAFT_HOST")
+MC_PORT = int(os.getenv("MINECRAFT_PORT", "25565"))
+
+RCON_HOST = os.getenv("RCON_HOST", MC_HOST)
+RCON_PORT = int(os.getenv("RCON_PORT", "25575"))
+RCON_PASSWORD = os.getenv("RCON_PASSWORD")
+
+STATUS_CHANNEL_ID = int(os.getenv("STATUS_CHANNEL_ID", "0"))
+LOG_CHANNEL_ID = int(os.getenv("LOG_CHANNEL_ID", "0"))
+
+STATE_FILE = "state.json"
+
+SFTP_HOST = os.getenv("SFTP_HOST")
+SFTP_PORT = int(os.getenv("SFTP_PORT", "2022"))
+SFTP_USERNAME = os.getenv("SFTP_USERNAME")
+SFTP_PASSWORD = os.getenv("SFTP_PASSWORD")
+SFTP_LOG_PATH = os.getenv("SFTP_LOG_PATH", "/logs/latest.log")
+
+DEATH_POLL_SECONDS = 5
+
+logging.basicConfig(
+    filename="bot.log",
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s",
+    encoding="utf-8",
+)
+
+intents = discord.Intents.default()
+intents.message_content = True
+
+bot = commands.Bot(command_prefix="!", intents=intents)
+
+previous_players = None
+
+
+# Estado de las alertas para evitar mensajes repetidos.
+minecraft_was_online = None
+minecraft_failure_count = 0
+minecraft_recovery_count = 0
+
+# Dos comprobaciones consecutivas para confirmar cada cambio.
+ALERT_FAILURE_THRESHOLD = 2
+ALERT_RECOVERY_THRESHOLD = 2
+
+
+# ---------- ESTADO Y ARCHIVO DE CONFIGURACIÓN ----------
+
+def load_state():
+    try:
+        with open(STATE_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+
+
+def save_state(data):
+    with open(STATE_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
+
+
+def get_status():
+    server = JavaServer(MC_HOST, MC_PORT)
+    status = server.status()
+
+    sample = getattr(status.players, "sample", None) or []
+    names = {p.name for p in sample if getattr(p, "name", None)}
+
+    return {
+        "online": status.players.online,
+        "maximum": status.players.max,
+        "version": status.version.name,
+        "latency": round(status.latency),
+        "names": names,
+    }
+
+
+# ---------- RCON ----------
+
+
+def run_rcon(command):
+    if not RCON_PASSWORD:
+        raise RuntimeError("RCON_PASSWORD no está configurada")
+
+    with MCRcon(
+        RCON_HOST,
+        RCON_PASSWORD,
+        port=RCON_PORT,
+        timeout=5,
+    ) as client:
+        return client.command(command)
+
+
+async def send_rcon(command):
+    return run_rcon(command)
+
+
+async def send_log(message):
+    logging.info(message)
+
+    if LOG_CHANNEL_ID:
+        channel = bot.get_channel(LOG_CHANNEL_ID)
+
+        if channel is None:
+            try:
+                channel = await bot.fetch_channel(LOG_CHANNEL_ID)
+            except (discord.HTTPException, discord.Forbidden):
+                channel = None
+
+        if channel and hasattr(channel, "send"):
+            try:
+                await channel.send(message[:1900])
+            except discord.HTTPException:
+                pass
+
+
+async def send_discord_alert(message):
+    """Envía alertas exclusivamente al canal de Discord configurado."""
+    if not LOG_CHANNEL_ID:
+        logging.warning("No hay LOG_CHANNEL_ID configurado para las alertas.")
+        return
+
+    try:
+        channel_id = LOG_CHANNEL_ID
+        channel = bot.get_channel(channel_id)
+
+        if channel is None:
+            channel = await bot.fetch_channel(channel_id)
+
+        await channel.send(
+            message,
+            allowed_mentions=discord.AllowedMentions.none()
+        )
+
+    except Exception:
+        logging.exception("No se pudo enviar una alerta a Discord.")
+
+
+# ---------- ALERTAS DE MUERTES POR SFTP ----------
+
+DEATH_PATTERNS = [
+    re.compile(
+        r"\]: (?P<player>[A-Za-z0-9_]{1,16}) "
+        r"was slain by (?P<cause>.+)$"
+    ),
+    re.compile(
+        r"\]: (?P<player>[A-Za-z0-9_]{1,16}) "
+        r"was shot by (?P<cause>.+)$"
+    ),
+    re.compile(
+        r"\]: (?P<player>[A-Za-z0-9_]{1,16}) "
+        r"fell from a high place\.?$"
+    ),
+    re.compile(
+        r"\]: (?P<player>[A-Za-z0-9_]{1,16}) "
+        r"drowned\.?$"
+    ),
+    re.compile(
+        r"\]: (?P<player>[A-Za-z0-9_]{1,16}) "
+        r"hit the ground too hard\.?$"
+    ),
+    re.compile(
+        r"\]: (?P<player>[A-Za-z0-9_]{1,16}) "
+        r"went up in flames\.?$"
+    ),
+    re.compile(
+        r"\]: (?P<player>[A-Za-z0-9_]{1,16}) "
+        r" burned to death\.?$"
+    ),
+]
+
+DEATH_STATE_FILE = "death_state.json"
+
+
+def read_death_state():
+    try:
+        with open(DEATH_STATE_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+
+
+def save_death_state(data):
+    temp_file = DEATH_STATE_FILE + ".tmp"
+    with open(temp_file, "w", encoding="utf-8") as f:
+        json.dump(data, f)
+    os.replace(temp_file, DEATH_STATE_FILE)
+
+
+def parse_death(line):
+    match = re.search(
+        r"\[net\.minecraft\.server\.MinecraftServer/\]: "
+        r"(?P<player>[A-Za-z0-9_]{1,16}) "
+        r"(?P<cause>was killed|was slain by .+|was shot by .+|"
+        r"fell from a high place|drowned|hit the ground too hard|"
+        r"went up in flames|burned to death|burned to death\.?)$",
+        line,
+    )
+    if not match:
+        return None
+
+    player = match.group("player")
+    cause = match.group("cause")
+
+    if cause == "was killed":
+        return f"💀 **{player}** ha muerto por /kill."
+
+    return f"💀 **{player}** ha muerto: {cause}."
+
+
+def fetch_new_log_lines(state):
+    transport = paramiko.Transport((SFTP_HOST, SFTP_PORT))
+    try:
+        transport.connect(
+            username=SFTP_USERNAME,
+            password=SFTP_PASSWORD,
+        )
+        sftp = paramiko.SFTPClient.from_transport(transport)
+
+        try:
+            info = sftp.stat(SFTP_LOG_PATH)
+            size = info.st_size
+            old_size = state.get("offset", 0)
+
+            # Primera ejecución: empezar al final para ignorar muertes antiguas.
+            if not state.get("initialized"):
+                state["offset"] = size
+                state["initialized"] = True
+                save_death_state(state)
+                return []
+
+            # El archivo se ha reiniciado o rotado.
+            if size < old_size:
+                old_size = 0
+
+            with sftp.open(SFTP_LOG_PATH, "rb") as remote_file:
+                remote_file.seek(old_size)
+                content = remote_file.read()
+
+            state["offset"] = old_size + len(content)
+            save_death_state(state)
+
+            return content.decode("utf-8", errors="replace").splitlines()
+        finally:
+            sftp.close()
+    finally:
+        transport.close()
+
+
+@tasks.loop(seconds=DEATH_POLL_SECONDS)
+async def death_alert_loop():
+    if not all([SFTP_HOST, SFTP_USERNAME, SFTP_PASSWORD, SFTP_LOG_PATH]):
+        logging.error("Falta configurar SFTP en .env")
+        return
+
+    state = read_death_state()
+
+    try:
+        lines = await asyncio.to_thread(fetch_new_log_lines, state)
+    except Exception:
+        logging.exception("Error leyendo latest.log por SFTP")
+        return
+
+    for line in lines:
+        message = parse_death(line)
+        if message:
+            await send_discord_alert(message)
+
+
+@death_alert_loop.before_loop
+async def before_death_alert_loop():
+    await bot.wait_until_ready()
+
+
+
+def valid_username(name):
+    return bool(re.fullmatch(r"[A-Za-z0-9_]{1,16}", name))
+
+
+async def require_admin(interaction: discord.Interaction):
+    if not interaction.guild:
+        await interaction.response.send_message(
+            "Este comando solo funciona dentro de un servidor de Discord.",
+            ephemeral=True,
+        )
+        return False
+
+    if not interaction.permissions.administrator:
+        await interaction.response.send_message(
+            "Necesitas el permiso Administrador para utilizarlo.",
+            ephemeral=True,
+        )
+        return False
+
+    return True
+
+
+# ---------- ARRANQUE ----------
+
+
+@bot.event
+async def on_ready():
+    synced = await bot.tree.sync()
+    print(f"Conectado como {bot.user}")
+    print("Comandos sincronizados:", [cmd.name for cmd in synced])
+
+    if not getattr(bot, "_admin_panel_registered", False):
+        bot.add_view(MinecraftAdminPanel())
+        bot._admin_panel_registered = True
+
+    if not status_loop.is_running():
+        status_loop.start()
+
+    if not death_alert_loop.is_running():
+        death_alert_loop.start()
+
+
+# ---------- ESTADO AUTOMÁTICO ----------
+
+def create_status_embed(data=None):
+    embed = discord.Embed(
+        title="Estado del servidor Minecraft",
+        color=discord.Color.green() if data else discord.Color.red(),
+    )
+
+    if data:
+        embed.add_field(name="Estado", value="🟢 Online", inline=True)
+        embed.add_field(
+            name="Jugadores",
+            value=f"{data['online']}/{data['maximum']}",
+            inline=True,
+        )
+        embed.add_field(
+            name="Versión",
+            value=data["version"][:100],
+            inline=True,
+        )
+        embed.add_field(
+            name="Latencia",
+            value=f"{data['latency']} ms",
+            inline=True,
+        )
+    else:
+        embed.add_field(
+            name="Estado",
+            value="🔴 Offline o sin conexión",
+            inline=False,
+        )
+
+    embed.set_footer(text="Actualización automática cada 10 segundos")
+    return embed
+
+
+
+@tasks.loop(seconds=10)
+async def status_loop():
+    global previous_players
+    global minecraft_was_online
+    global minecraft_failure_count, minecraft_recovery_count
+
+    if not STATUS_CHANNEL_ID:
+        return
+
+    # Consultar el estado de Minecraft
+    try:
+        data = await asyncio.to_thread(get_status)
+    except Exception as exc:
+        data = None
+        logging.warning("Error consultando estado: %s", exc)
+
+    # Detectar caídas y recuperaciones
+    if data is None:
+        minecraft_failure_count += 1
+        minecraft_recovery_count = 0
+
+        if (
+            minecraft_failure_count >= ALERT_FAILURE_THRESHOLD
+            and minecraft_was_online is not False
+        ):
+            minecraft_was_online = False
+            await send_discord_alert(
+                "🔴 **Minecraft no responde**\n"
+                "El servidor ha fallado en dos comprobaciones consecutivas."
+            )
+
+    else:
+        minecraft_recovery_count += 1
+        minecraft_failure_count = 0
+
+        if minecraft_recovery_count >= ALERT_RECOVERY_THRESHOLD:
+            if minecraft_was_online is False:
+                await send_discord_alert(
+                    "🟢 **Minecraft vuelve a estar disponible**\n"
+                    "El servidor ha respondido a dos comprobaciones consecutivas."
+                )
+
+            minecraft_was_online = True
+
+    # Actualizar el mensaje de estado existente
+    state = load_state()
+    channel = bot.get_channel(STATUS_CHANNEL_ID)
+
+    if channel is None:
+        try:
+            channel = await bot.fetch_channel(STATUS_CHANNEL_ID)
+        except (discord.HTTPException, discord.Forbidden):
+            logging.error("No se puede acceder al canal de estado")
+            return
+
+    message = None
+    message_id = state.get("status_message_id")
+
+    if message_id:
+        try:
+            message = await channel.fetch_message(message_id)
+        except discord.NotFound:
+            message = None
+        except discord.HTTPException:
+            logging.exception("No se pudo recuperar el mensaje de estado")
+            return
+
+    if message is None:
+        message = await channel.send(embed=create_status_embed(data))
+        state["status_message_id"] = message.id
+        save_state(state)
+    else:
+        await message.edit(embed=create_status_embed(data))
+
+    # Notificar posibles entradas y salidas de jugadores
+    # solo si Minecraft proporciona nombres.
+    if data and data["names"]:
+        if previous_players is not None:
+            joined = data["names"] - previous_players
+            left = previous_players - data["names"]
+
+            for name in sorted(joined):
+                await send_log(
+                    f"🟢 Posible entrada de jugador: **{name}**"
+                )
+
+            for name in sorted(left):
+                await send_log(
+                    f"🔴 Posible salida de jugador: **{name}**"
+                )
+
+        previous_players = data["names"]
+
+
+
+@status_loop.before_loop
+async def before_status_loop():
+    await bot.wait_until_ready()
+    try:
+        data = await asyncio.to_thread(get_status)
+    except Exception as exc:
+        data = None
+        logging.warning("Error consultando estado: %s", exc)
+
+# ---------- COMANDOS DE CONSULTA ----------
+
+@bot.tree.command(name="estado", description="Consulta el estado de Minecraft")
+async def estado(interaction: discord.Interaction):
+    await interaction.response.defer(thinking=True)
+
+    try:
+        data = await asyncio.to_thread(get_status)
+
+        await interaction.followup.send(
+            embed=create_status_embed(data)
+        )
+
+    except Exception as exc:
+        logging.exception("Error consultando Minecraft en /estado")
+        await interaction.followup.send(
+            f"No se pudo consultar Minecraft: "
+            f"`{type(exc).__name__}: {str(exc)[:300]}`"
+        )
+
+@bot.tree.command(name="jugadores", description="Consulta los jugadores conectados")
+async def jugadores(interaction: discord.Interaction):
+    await interaction.response.defer(thinking=True)
+
+    try:
+        result = await send_rcon("list")
+        await interaction.followup.send(
+            f"**Jugadores conectados**\n{result[:1800] or 'Sin respuesta'}"
+        )
+    except Exception as exc:
+        logging.exception("Error en /jugadores")
+        await interaction.followup.send(
+            f"Error RCON: `{type(exc).__name__}: {str(exc)[:400]}`"
+        )
+
+
+
+# ---------- ADMINISTRACIÓN ----------
+
+@bot.tree.command(name="rcon", description="Ejecuta un comando de consola Minecraft")
+@app_commands.describe(comando="Comando Minecraft sin la barra inicial")
+async def rcon(interaction: discord.Interaction, comando: str):
+    if not await require_admin(interaction):
+        return
+
+    comando = comando.strip().lstrip("/")
+
+    if not comando or len(comando) > 200 or "\n" in comando:
+        await interaction.response.send_message(
+            "Comando vacío o demasiado largo.", ephemeral=True
+        )
+        return
+
+    await interaction.response.defer(ephemeral=True, thinking=True)
+
+    try:
+        result = await send_rcon(comando)
+        await send_log(
+            f"🛠️ RCON ejecutado por {interaction.user} "
+            f"(ID {interaction.user.id}): `{comando[:150]}`"
+        )
+        await interaction.followup.send(
+            f"```text\n{(result or 'Comando ejecutado sin respuesta')[:1700]}\n```",
+            ephemeral=True,
+        )
+    except Exception:
+        logging.exception("Error ejecutando RCON")
+        await interaction.followup.send(
+            "Error al conectar con RCON. Revisa host, puerto y contraseña.",
+            ephemeral=True,
+        )
+
+
+@bot.tree.command(name="kick", description="Expulsa a un jugador")
+@app_commands.describe(jugador="Nombre exacto del jugador", motivo="Motivo")
+async def kick(
+    interaction: discord.Interaction,
+    jugador: str,
+    motivo: str = "Expulsado por un administrador",
+):
+    if not await require_admin(interaction):
+        return
+
+    if not valid_username(jugador):
+        await interaction.response.send_message(
+            "Nombre de Minecraft no válido.", ephemeral=True
+        )
+        return
+
+    await interaction.response.defer(ephemeral=True)
+
+    try:
+        result = await send_rcon(f'kick {jugador} {motivo[:150]}')
+        await send_log(
+            f"👢 {jugador} expulsado por {interaction.user}: {motivo[:150]}"
+        )
+        await interaction.followup.send(
+            result or f"Comando de expulsión enviado para {jugador}.",
+            ephemeral=True,
+        )
+    except Exception:
+        await interaction.followup.send("Error al ejecutar kick.", ephemeral=True)
+
+
+@bot.tree.command(name="ban", description="Banea a un jugador")
+@app_commands.describe(jugador="Nombre exacto del jugador", motivo="Motivo")
+async def ban(
+    interaction: discord.Interaction,
+    jugador: str,
+    motivo: str = "Baneado por un administrador",
+):
+    if not await require_admin(interaction):
+        return
+
+    if not valid_username(jugador):
+        await interaction.response.send_message(
+            "Nombre de Minecraft no válido.", ephemeral=True
+        )
+        return
+
+    await interaction.response.defer(ephemeral=True)
+
+    try:
+        result = await send_rcon(f'ban {jugador} {motivo[:150]}')
+        await send_log(
+            f"🔨 {jugador} baneado por {interaction.user}: {motivo[:150]}"
+        )
+        await interaction.followup.send(
+            result or f"Comando de baneo enviado para {jugador}.",
+            ephemeral=True,
+        )
+    except Exception:
+        await interaction.followup.send("Error al ejecutar ban.", ephemeral=True)
+
+
+@bot.tree.command(name="unban", description="Retira el baneo de un jugador")
+async def unban(interaction: discord.Interaction, jugador: str):
+    if not await require_admin(interaction):
+        return
+
+    if not valid_username(jugador):
+        await interaction.response.send_message(
+            "Nombre de Minecraft no válido.", ephemeral=True
+        )
+        return
+
+    await interaction.response.defer(ephemeral=True)
+
+    try:
+        result = await send_rcon(f'pardon {jugador}')
+        await send_log(f"🔓 Baneo retirado a {jugador} por {interaction.user}")
+        await interaction.followup.send(
+            result or f"Se ha enviado pardon para {jugador}.",
+            ephemeral=True,
+        )
+    except Exception:
+        await interaction.followup.send("Error al ejecutar pardon.", ephemeral=True)
+
+
+@bot.tree.command(name="whitelist_add", description="Añade un jugador a la whitelist")
+async def whitelist_add(interaction: discord.Interaction, jugador: str):
+    if not await require_admin(interaction):
+        return
+
+    if not valid_username(jugador):
+        await interaction.response.send_message(
+            "Nombre de Minecraft no válido.", ephemeral=True
+        )
+        return
+
+    await interaction.response.defer(ephemeral=True)
+
+    try:
+        result = await send_rcon(f"whitelist add {jugador}")
+        await send_log(f"📋 {jugador} añadido a la whitelist por {interaction.user}")
+        await interaction.followup.send(
+            result or f"Se ha enviado whitelist add para {jugador}.",
+            ephemeral=True,
+        )
+    except Exception:
+        await interaction.followup.send(
+            "Error al modificar la whitelist.", ephemeral=True
+        )
+
+
+@bot.tree.command(name="whitelist_remove", description="Elimina un jugador de la whitelist")
+async def whitelist_remove(interaction: discord.Interaction, jugador: str):
+    if not await require_admin(interaction):
+        return
+
+    if not valid_username(jugador):
+        await interaction.response.send_message(
+            "Nombre de Minecraft no válido.", ephemeral=True
+        )
+        return
+
+    await interaction.response.defer(ephemeral=True)
+
+    try:
+        result = await send_rcon(f"whitelist remove {jugador}")
+        await send_log(
+            f"📋 {jugador} eliminado de la whitelist por {interaction.user}"
+        )
+        await interaction.followup.send(
+            result or f"Se ha enviado whitelist remove para {jugador}.",
+            ephemeral=True,
+        )
+    except Exception:
+        await interaction.followup.send(
+            "Error al modificar la whitelist.", ephemeral=True
+        )
+
+
+# ---------- PANEL DE ADMINISTRACIÓN ----------
+
+class AdminActionModal(discord.ui.Modal):
+    def __init__(self, action):
+        self.action = action
+
+        titles = {
+            "kick": "Expulsar jugador",
+            "ban": "Banear jugador",
+            "unban": "Retirar baneo",
+            "whitelist_add": "Añadir a whitelist",
+            "whitelist_remove": "Eliminar de whitelist",
+            "rcon": "Ejecutar comando RCON",
+        }
+
+        super().__init__(title=titles[action])
+
+        if action == "rcon":
+            self.command_input = discord.ui.TextInput(
+                label="Comando Minecraft (sin /)",
+                max_length=200,
+                required=True,
+            )
+            self.add_item(self.command_input)
+        else:
+            self.player_input = discord.ui.TextInput(
+                label="Nombre exacto del jugador",
+                max_length=16,
+                required=True,
+            )
+            self.add_item(self.player_input)
+
+            if action in ("kick", "ban"):
+                self.reason_input = discord.ui.TextInput(
+                    label="Motivo",
+                    max_length=150,
+                    required=False,
+                )
+                self.add_item(self.reason_input)
+
+    async def on_submit(self, interaction: discord.Interaction):
+        if not await require_admin(interaction):
+            return
+
+        if self.action == "rcon":
+            command = str(self.command_input.value).strip().lstrip("/")
+
+            if not command or "\n" in command or "\r" in command:
+                await interaction.response.send_message(
+                    "Comando no válido.", ephemeral=True
+                )
+                return
+        else:
+            player = str(self.player_input.value).strip()
+
+            if not valid_username(player):
+                await interaction.response.send_message(
+                    "Nombre de Minecraft no válido.", ephemeral=True
+                )
+                return
+
+            commands = {
+                "kick": "kick",
+                "ban": "ban",
+                "unban": "pardon",
+                "whitelist_add": "whitelist add",
+                "whitelist_remove": "whitelist remove",
+            }
+
+            command = f"{commands[self.action]} {player}"
+
+            if self.action in ("kick", "ban"):
+                reason = str(self.reason_input.value).strip()
+                if reason:
+                    command += f" {reason}"
+
+        await interaction.response.defer(ephemeral=True, thinking=True)
+
+        try:
+            result = await send_rcon(command)
+
+            await send_log(
+                f"🛠️ Panel admin: {interaction.user} "
+                f"(ID {interaction.user.id}) ejecutó `{command[:150]}`"
+            )
+
+            await interaction.followup.send(
+                f"```text\n{(result or 'Comando enviado.')[:1700]}\n```",
+                ephemeral=True,
+            )
+
+        except Exception:
+            logging.exception("Error en acción del panel administrativo")
+            await interaction.followup.send(
+                "No se pudo ejecutar la acción. Revisa los registros.",
+                ephemeral=True,
+            )
+
+
+class MinecraftAdminPanel(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+
+    async def open_action(self, interaction, action):
+        if not await require_admin(interaction):
+            return
+
+        await interaction.response.send_modal(AdminActionModal(action))
+
+    @discord.ui.button(
+        label="Estado",
+        emoji="📊",
+        style=discord.ButtonStyle.success,
+        custom_id="mcadmin:status",
+        row=0,
+    )
+    async def status_button(self, interaction, button):
+        if not await require_admin(interaction):
+            return
+
+        await interaction.response.defer(ephemeral=True, thinking=True)
+
+        try:
+            data = await asyncio.to_thread(get_status)
+            await interaction.followup.send(
+                embed=create_status_embed(data), ephemeral=True
+            )
+        except Exception:
+            logging.exception("Error consultando estado desde el panel")
+            await interaction.followup.send(
+                "No se pudo consultar el estado del servidor.",
+                ephemeral=True,
+            )
+
+    @discord.ui.button(
+        label="Jugadores",
+        emoji="👥",
+        style=discord.ButtonStyle.primary,
+        custom_id="mcadmin:players",
+        row=0,
+    )
+    async def players_button(self, interaction, button):
+        if not await require_admin(interaction):
+            return
+
+        await interaction.response.defer(ephemeral=True, thinking=True)
+
+        try:
+            result = await send_rcon("list")
+            await interaction.followup.send(
+                f"**Jugadores conectados**\n{(result or 'Sin respuesta')[:1800]}",
+                ephemeral=True,
+            )
+        except Exception:
+            logging.exception("Error consultando jugadores desde el panel")
+            await interaction.followup.send(
+                "No se pudo consultar la lista de jugadores.",
+                ephemeral=True,
+            )
+
+    @discord.ui.button(
+        label="Kick",
+        emoji="👢",
+        style=discord.ButtonStyle.secondary,
+        custom_id="mcadmin:kick",
+        row=1,
+    )
+    async def kick_button(self, interaction, button):
+        await self.open_action(interaction, "kick")
+
+    @discord.ui.button(
+        label="Ban",
+        emoji="🔨",
+        style=discord.ButtonStyle.danger,
+        custom_id="mcadmin:ban",
+        row=1,
+    )
+    async def ban_button(self, interaction, button):
+        await self.open_action(interaction, "ban")
+
+    @discord.ui.button(
+        label="Unban",
+        emoji="🔓",
+        style=discord.ButtonStyle.secondary,
+        custom_id="mcadmin:unban",
+        row=1,
+    )
+    async def unban_button(self, interaction, button):
+        await self.open_action(interaction, "unban")
+
+    @discord.ui.button(
+        label="Whitelist +",
+        emoji="➕",
+        style=discord.ButtonStyle.success,
+        custom_id="mcadmin:wladd",
+        row=2,
+    )
+    async def whitelist_add_button(self, interaction, button):
+        await self.open_action(interaction, "whitelist_add")
+
+    @discord.ui.button(
+        label="Whitelist -",
+        emoji="➖",
+        style=discord.ButtonStyle.secondary,
+        custom_id="mcadmin:wlremove",
+        row=2,
+    )
+    async def whitelist_remove_button(self, interaction, button):
+        await self.open_action(interaction, "whitelist_remove")
+
+    @discord.ui.button(
+        label="Consola RCON",
+        emoji="⌨️",
+        style=discord.ButtonStyle.primary,
+        custom_id="mcadmin:rcon",
+        row=2,
+    )
+    async def rcon_button(self, interaction, button):
+        await self.open_action(interaction, "rcon")
+
+
+@bot.tree.command(
+    name="panel_admin",
+    description="Publica el panel interactivo de administración de Minecraft",
+)
+async def panel_admin(interaction: discord.Interaction):
+    if not await require_admin(interaction):
+        return
+
+    embed = discord.Embed(
+        title="🎮 Panel de administración de Minecraft",
+        description=(
+            "Utiliza los botones para consultar el servidor o gestionar jugadores.\n\n"
+            "🔒 Las acciones requieren permiso Administrador de Discord."
+        ),
+        color=discord.Color.dark_green(),
+    )
+
+    embed.set_footer(
+        text="Minecraft Java 1.20.1 • Panel interactivo"
+    )
+
+    await interaction.response.send_message(
+        embed=embed,
+        view=MinecraftAdminPanel(),
+    )
+
+    await send_log(
+        f"🎛️ {interaction.user} publicó el panel de administración."
+    )
+
+
+# ---------- ERRORES Y ARRANQUE ----------
+
+@bot.tree.error
+async def on_app_command_error(
+    interaction: discord.Interaction,
+    error: app_commands.AppCommandError,
+):
+    logging.error("Error en comando de Discord: %s", error)
+
+    message = "Se ha producido un error al ejecutar el comando."
+
+    if interaction.response.is_done():
+        await interaction.followup.send(message, ephemeral=True)
+    else:
+        await interaction.response.send_message(message, ephemeral=True)
+
+
+if not TOKEN or not MC_HOST:
+    raise RuntimeError("Configura DISCORD_TOKEN y MINECRAFT_HOST en .env")
+
+@bot.command()
+async def probarcanal(ctx):
+    try:
+        canal = await bot.fetch_channel(LOG_CHANNEL_ID)
+        await canal.send("✅ Prueba de alertas de Minecraft.")
+        await ctx.reply(f"Canal encontrado: {canal.name}")
+    except Exception as e:
+        logging.exception("Error en probarcanal")
+        await ctx.reply(f"Error al acceder al canal: {type(e).__name__}")
+
+bot.run(TOKEN)

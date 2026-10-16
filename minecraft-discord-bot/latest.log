@@ -1,0 +1,831 @@
+[13Oct2026 10:00:31.453] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeserver, --fml.forgeVersion, 47.4.26, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412]
+[13Oct2026 10:00:31.455] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 21.0.11 by Eclipse Adoptium; OS Linux arch amd64 version 6.8.0-90-generic
+[13Oct2026 10:00:31.806] [main/INFO] [net.minecraftforge.fml.loading.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgeserver
+[13Oct2026 10:00:31.828] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/home/container/libraries/org/spongepowered/mixin/0.8.5/mixin-0.8.5.jar%2365!/ Service=ModLauncher Env=SERVER
+[13Oct2026 10:00:32.017] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModDiscoverer/SCAN]: Locator {mods folder locator at /home/container/mods} returned 3 files which are client-side-only mods, but we're on a dedicated server. They will be skipped!
+[13Oct2026 10:00:32.074] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/container/libraries/net/minecraftforge/fmlcore/1.20.1-47.4.26/fmlcore-1.20.1-47.4.26.jar is missing mods.toml file
+[13Oct2026 10:00:32.075] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/container/libraries/net/minecraftforge/javafmllanguage/1.20.1-47.4.26/javafmllanguage-1.20.1-47.4.26.jar is missing mods.toml file
+[13Oct2026 10:00:32.075] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/container/libraries/net/minecraftforge/lowcodelanguage/1.20.1-47.4.26/lowcodelanguage-1.20.1-47.4.26.jar is missing mods.toml file
+[13Oct2026 10:00:32.075] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/container/libraries/net/minecraftforge/mclanguage/1.20.1-47.4.26/mclanguage-1.20.1-47.4.26.jar is missing mods.toml file
+[13Oct2026 10:00:32.766] [main/WARN] [net.minecraftforge.jarjar.selection.JarSelector/]: Attempted to select a dependency jar for JarJar which was passed in as source: fabric_api. Using Mod File: /home/container/mods/fabric-api-0.92.6+1.11.15+1.20.1.jar
+[13Oct2026 10:00:32.766] [main/INFO] [net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator/]: Found 99 dependencies adding them to mods collection
+[13Oct2026 10:00:32.936] [main/INFO] [org.groovymc.gml.mappings.MappingsProvider/]: Starting runtime mappings setup...
+[13Oct2026 10:00:32.947] [main/INFO] [org.groovymc.gml.internal.locator.ModLocatorInjector/]: Injecting ScriptModLocator candidates...
+[13Oct2026 10:00:32.952] [main/INFO] [org.groovymc.gml.scriptmods.ScriptModLocator/]: Injected Jimfs file system
+[13Oct2026 10:00:32.955] [main/INFO] [org.groovymc.gml.scriptmods.ScriptModLocator/]: Skipped loading script mods from directory /home/container/mods/scripts as it did not exist.
+[13Oct2026 10:00:32.958] [main/INFO] [org.groovymc.gml.internal.locator.ModLocatorInjector/]: Injected ScriptModLocator mod candidates. Found 0 valid mod candidates and 0 broken mod files.
+[13Oct2026 10:00:34.590] [GML Mappings Thread/INFO] [org.groovymc.gml.mappings.MappingsProvider/]: Loaded runtime mappings in 1629ms
+[13Oct2026 10:00:34.591] [GML Mappings Thread/INFO] [org.groovymc.gml.mappings.MappingsProvider/]: Finished runtime mappings setup.
+[13Oct2026 10:00:35.729] [main/INFO] [mixin/]: Compatibility level set to JAVA_17
+[13Oct2026 10:00:35.733] [main/ERROR] [mixin/]: Mixin config hamsters.mixins.json does not specify "minVersion" property
+[13Oct2026 10:00:35.812] [main/ERROR] [mixin/]: Mixin config fabric-item-group-api-v1.mixins.json does not specify "minVersion" property
+[13Oct2026 10:00:35.812] [main/ERROR] [mixin/]: Mixin config fabric-item-group-api-v1.client.mixins.json does not specify "minVersion" property
+[13Oct2026 10:00:35.825] [main/ERROR] [mixin/]: Mixin config fabric-item-api-v1.client.mixins.json does not specify "minVersion" property
+[13Oct2026 10:00:35.830] [main/ERROR] [mixin/]: Mixin config fabric-data-attachment-api-v1.mixins.json does not specify "minVersion" property
+[13Oct2026 10:00:35.831] [main/ERROR] [mixin/]: Mixin config fabric-data-attachment-api-v1.client.mixins.json does not specify "minVersion" property
+[13Oct2026 10:00:35.835] [main/ERROR] [mixin/]: Mixin config cameraoverhaul.mixins.json does not specify "minVersion" property
+[13Oct2026 10:00:35.909] [main/ERROR] [mixin/]: Mixin config yacl.mixins.json does not specify "minVersion" property
+[13Oct2026 10:00:35.930] [main/INFO] [mixin/]: Successfully loaded Mixin Connector [com.sonicether.soundphysics.MixinConnector]
+[13Oct2026 10:00:35.931] [main/INFO] [net.fabricmc.loader.impl.bootstrap.FabricLoaderBootstrap/]: Propagating FML mod list to Fabric Loader
+[13Oct2026 10:00:35.936] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeserver' with arguments []
+[13Oct2026 10:00:35.968] [main/INFO] [com.abdelaziz.saturn.common.Saturn/]: Loaded Saturn config file with 4 configurable options
+[13Oct2026 10:00:35.974] [main/WARN] [mixin/]: Reference map 'hamsters.refmap.json' for hamsters.mixins.json could not be read. If this is a development environment you can ignore this message
+[13Oct2026 10:00:36.031] [main/INFO] [ModernFix/]: Loaded configuration file for ModernFix 5.27.88+mc1.20.1: 110 options available, 1 override(s) found
+[13Oct2026 10:00:36.032] [main/WARN] [ModernFix/]: Option 'mixin.perf.thread_priorities' overriden (by mods [smoothboot]) to 'false'
+[13Oct2026 10:00:36.032] [main/INFO] [ModernFix/]: Applying Nashorn fix
+[13Oct2026 10:00:36.067] [main/INFO] [ModernFix/]: Applied Forge config corruption patch
+[13Oct2026 10:00:36.078] [main/WARN] [mixin/]: Reference map '' for chat_heads.forge.mixins.json could not be read. If this is a development environment you can ignore this message
+[13Oct2026 10:00:36.084] [main/INFO] [Embeddium/]: Loaded configuration file for Embeddium: 242 options available, 0 override(s) found
+[13Oct2026 10:00:36.090] [main/WARN] [mixin/]: Reference map 'handcrafted-forge-1.20.1-forge-refmap.json' for handcrafted.mixins.json could not be read. If this is a development environment you can ignore this message
+[13Oct2026 10:00:36.188] [main/WARN] [mixin/]: Reference map 'puzzlesaccessapi.common.refmap.json' for puzzlesaccessapi.common.mixins.json could not be read. If this is a development environment you can ignore this message
+[13Oct2026 10:00:36.227] [main/INFO] [Puzzles Lib/]: Loading 196 mods:
+	- ambientsounds 6.3.10
+	- amendments 1.20-2.2.6
+	- animatica 1.20.1-0.1.3
+	- anomaly_rephased 2.0.032
+	- anvilrepairing 4.0.10
+	- appleskin 2.5.1+mc1.20.1
+	- architectury 9.2.14
+	- attributefix 21.0.5
+	- badoptimizations 2.4.1
+	- balm 7.3.44
+		\-- kuma_api 20.1.12
+	- betteradvancements 0.6.0.73
+	- betteranimationscollection 8.0.1
+	- bettercaves 1.20.1-Forge-2.0.7
+	- betterdungeons 1.20-Forge-4.0.4
+	- betterf3 7.0.2
+	- bettermineshafts 1.20-Forge-4.0.4
+	- betterstrongholds 1.20-Forge-4.0.3
+	- betterthirdperson 1.9.0
+	- biomas_vanilla_renovados 2.0.0
+	- bookshelf 20.2.15
+	- boss_music_mod 1.2.1
+	- cameraoverhaul 2.1.2-forge+mc.1.20-1.20.5
+	- catalogue 1.8.0
+	- cave_dweller 1.7.0
+	- chat_heads 0.15.7
+	- chatimpressiveanimation 1.6.0+mc1.20.4
+	- chloride 1.8.1
+	- citadel 2.6.3
+	- cloth_config 11.1.136
+	- clumps 12.0.0.4
+	- collective 8.44
+	- commongroovylibrary 0.3.3
+	- cookingforblockheads 16.0.15
+	- corgilib 4.0.3.6
+	- craftpresence 2.7.1
+	- creativecore 2.12.40
+	- curios 5.14.1+1.20.1
+	- curiouslanterns 1.20.1-1.3.7
+	- dataanchor 1.0.0.23
+	- decorative_blocks 4.1.3
+	- distantfriends 0.5.6
+	- drippyloadingscreen 3.1.5
+	- durabilitytooltip 1.2.0
+	- dynamic_fps 3.11.4
+	- eatinganimation 5.1.0
+	- embeddium 0.3.31+mc1.20.1
+		\-- rubidium 0.7.1
+	- enchdesc 17.1.21
+	- enhanced_boss_bars 1.20.1-1.0.0
+	- enhancedcelestials2core 1.0.3.3
+	- enhancedcelestials2defaultlunarevents 1.0.0.6
+	- entity_model_features 3.3.11
+	- entity_texture_features 7.2.5
+	- exposure 1.7.16
+	- exposure_catalog 1.0.3
+	- eyesinthedarkness 1.3.10
+	- fabric_api 0.92.6+1.11.15+1.20.1
+		|-- fabric_api_base 0.4.32+ef105b4977
+		|-- fabric_api_lookup_api_v1 1.6.37+67f9824077
+		|-- fabric_biome_api_v1 13.0.14+dc36698e77
+		|-- fabric_block_api_v1 1.0.12+0e6cb7f777
+		|-- fabric_block_view_api_v2 1.0.3+53347ba977
+		|-- fabric_blockrenderlayer_v1 1.1.42+1d0da21e77
+		|-- fabric_client_tags_api_v1 1.1.3+5d6761b877
+		|-- fabric_command_api_v1 1.2.35+f71b366f77
+		|-- fabric_command_api_v2 2.2.14+561530ec77
+		|-- fabric_content_registries_v0 4.0.13+a670df1e77
+		|-- fabric_convention_tags_v1 1.5.6+fa3d1c0177
+		|-- fabric_data_attachment_api_v1 1.0.2+30ef839e77
+		|-- fabric_data_generation_api_v1 12.3.7+369cb3a477
+		|-- fabric_dimensions_v1 2.1.55+8005d10d77
+		|-- fabric_entity_events_v1 1.6.1+4ca7515277
+		|-- fabric_events_interaction_v0 0.6.5+0f26153f77
+		|-- fabric_game_rule_api_v1 1.0.41+683d4da877
+		|-- fabric_item_api_v1 2.1.29+4d0bbcfa77
+		|-- fabric_item_group_api_v1 4.0.14+c9161c2d77
+		|-- fabric_key_binding_api_v1 1.0.38+561530ec77
+		|-- fabric_lifecycle_events_v1 2.2.23+afab492177
+		|-- fabric_loot_api_v2 1.2.3+eb28f93e77
+		|-- fabric_message_api_v1 5.1.10+52cc178c77
+		|-- fabric_mining_level_api_v1 2.1.52+561530ec77
+		|-- fabric_model_loading_api_v1 1.0.4+6274ab9d77
+		|-- fabric_models_v0 0.4.3+7c3892a477
+		|-- fabric_networking_api_v1 1.3.14+fb7c822677
+		|-- fabric_object_builder_api_v1 11.1.5+f8c414ce77
+		|-- fabric_particles_v1 1.1.3+78e1ecb877
+		|-- fabric_recipe_api_v1 1.0.24+514a076577
+		|-- fabric_registry_sync_v0 2.3.6+1c0ea72177
+		|-- fabric_renderer_api_v1 3.2.2+cf68abbe77
+		|-- fabric_renderer_indigo 1.5.3+b5b2da4177
+		|-- fabric_rendering_data_attachment_v1 0.3.39+a6081afc77
+		|-- fabric_rendering_fluids_v1 3.0.29+4ac5e37a77
+		|-- fabric_rendering_v1 3.0.9+66e9a48f77
+		|-- fabric_resource_conditions_api_v1 2.3.9+996d00b277
+		|-- fabric_resource_loader_v0 0.11.12+4b4151c077
+		|-- fabric_screen_api_v1 2.0.9+45a670a577
+		|-- fabric_screen_handler_api_v1 1.3.33+561530ec77
+		|-- fabric_sound_api_v1 1.0.14+4f23bd8477
+		|-- fabric_transfer_api_v1 3.3.6+25eff73b77
+		\-- fabric_transitive_access_wideners_v1 4.3.2+1880499877
+	- fallingtrees 0.13.2
+	- fancymenu 3.9.14
+	- farmersdelight 1.20.1-1.3.4
+	- ferritecore 6.0.1
+	- foglooksmodernnow 1.2.1
+	- forge 47.4.26
+	- fusion 1.3.16
+	- fzzy_config 0.7.7+1.20.1+forge
+	- geckolib 4.8.4
+	- glitchcore 0.0.1.1
+	- gml 4.0.10
+	- gpu_tape 1.0.5
+	- gravestone 1.20.1-1.0.35
+	- guardvillagers 1.20.1-1.6.19
+	- hamsters 1.20.1-1.0.3
+	- handcrafted 3.0.6
+	- highlighter 1.1.9
+	- iceberg 1.1.25
+	- icterine 1.3.0
+	- immediatelyfast 1.5.5+1.20.4
+	- immersivelanterns 1.0.6
+	- ironchest 1.20.1-14.4.4
+	- itd_horror_protection 1.0.2
+	- itemborders 1.2.2
+	- jade 11.13.3+forge
+	- jei 15.56.0.205
+	- konkrete 1.8.0
+	- kotlinforforge 4.12.0
+	- lithostitched 1.4.11
+	- make_bubbles_pop 0.3.0-forge
+	- melody 1.0.2
+	- memoryleakfix 1.1.5
+	- midnightlib 1.9.2
+	- midnightlurker 3.3.7
+	- minecraft 1.20.1
+	- modelfix 1.15
+	- modernfix 5.27.88+mc1.20.1
+	- moonlight 1.20-2.16.36
+		\-- mixinsquared 0.1.1
+	- mousetweaks 2.25.1
+	- mr_animated_doors 1.0
+	- mr_limesplatus_ending 1-v1.1.0c
+	- mru 1.0.4+1.20.1+forge
+	- neruina 2.1.2
+	- netherchested 8.0.4
+		\-- puzzlesapi 8.1.7
+	- netherportalfix 13.0.1
+	- nochatreports 1.20.1-v2.2.3
+	- noisium 2.3.0+mc1.20-1.20.1
+	- notenoughcrashes 4.4.9+1.20.1
+	- nyfsspiders 3.0.2
+		\-- awcapi 1.0.3
+	- pale_hound 1.10.0
+	- pandalib 0.5.2
+	- particle_core 0.3.3+1.20.1+forge
+		\-- conditional_mixin 0.6.4
+	- particlerain 4.0.2
+	- potacore 1.20.1-0.4.2
+	- presencefootsteps 1.20.1-1.9.1-beta.1
+	- prism 1.0.5
+	- puzzleslib 8.1.36
+		\-- puzzlesaccessapi 20.1.1
+	- qualitysounds 1.5.0
+	- radiantgear 2.2.0+1.20.1
+	- realmrpg_skeletons 1.1.0
+	- resourcefulconfig 2.1.3
+	- resourcefullib 2.1.29
+	- saturn 0.1.3
+	- sereneseasons 9.1.0.2
+	- slenderman 1.1.11
+	- smarterfarmers 1.20-2.1.2
+	- smoothboot 0.0.4
+	- sodiumdynamiclights 1.0.9
+	- sound_physics_remastered 1.20.1-1.4.10
+	- spark 1.10.53
+	- spawnanimations 1.11.6+mod
+	- supermartijn642configlib 1.1.8
+	- supermartijn642corelib 1.1.25
+	- supplementaries 1.20-3.1.43
+	- suppsquared 1.20-1.1.29
+	- tectonic 3.0.17
+	- the_knocker 1.5.2
+	- the_one_who_watches 1.4.4
+	- tool_trims 3.0.7
+	- toolstats 16.0.10
+	- twigs 1.20.1-3.1.1
+	- txnilib 1.0.24
+	- unilib 1.2.1
+	- voicechat 1.20.1-2.6.24
+		\-- voicechat_api 2.6.24
+	- waterdripsound 0.5.2
+	- wi_zoom 1.5-MC1.20.1-Forge
+	- xaerominimap 26.6.0
+	- xaeroworldmap 1.46.0
+		\-- xaerolib 1.7.3
+	- yet_another_config_lib_v3 3.6.6+1.20.1-forge
+	- yungsapi 1.20-Forge-4.0.6
+[13Oct2026 10:00:36.268] [main/WARN] [mixin/]: Reference map 'cookingforblockheads.refmap.json' for cookingforblockheads.mixins.json could not be read. If this is a development environment you can ignore this message
+[13Oct2026 10:00:36.293] [main/WARN] [mixin/]: Reference map 'pandalib-common-common-refmap.json' for pandalib-common.mixins.json could not be read. If this is a development environment you can ignore this message
+[13Oct2026 10:00:36.835] [main/ERROR] [net.minecraftforge.fml.loading.RuntimeDistCleaner/DISTXFORM]: Attempted to load class net/minecraft/client/MouseHandler for invalid dist DEDICATED_SERVER
+[13Oct2026 10:00:36.836] [main/WARN] [mixin/]: Error loading class: net/minecraft/client/MouseHandler (java.lang.RuntimeException: Attempted to load class net/minecraft/client/MouseHandler for invalid dist DEDICATED_SERVER)
+[13Oct2026 10:00:36.836] [main/WARN] [mixin/]: @Mixin target net.minecraft.client.MouseHandler was not found fabric-screen-api-v1.mixins.json:MouseMixin
+[13Oct2026 10:00:36.837] [main/ERROR] [net.minecraftforge.fml.loading.RuntimeDistCleaner/DISTXFORM]: Attempted to load class net/minecraft/client/gui/screens/Screen for invalid dist DEDICATED_SERVER
+[13Oct2026 10:00:36.837] [main/WARN] [mixin/]: Error loading class: net/minecraft/client/gui/screens/Screen (java.lang.RuntimeException: Attempted to load class net/minecraft/client/gui/screens/Screen for invalid dist DEDICATED_SERVER)
+[13Oct2026 10:00:36.837] [main/WARN] [mixin/]: @Mixin target net.minecraft.client.gui.screens.Screen was not found fabric-screen-api-v1.mixins.json:ScreenAccessor
+[13Oct2026 10:00:36.844] [main/WARN] [mixin/]: Error loading class: com/simibubi/create/content/fluids/spout/FillingBySpout (java.lang.ClassNotFoundException: com.simibubi.create.content.fluids.spout.FillingBySpout)
+[13Oct2026 10:00:37.003] [main/INFO] [Enhanced Celestials 2: Core/]: TimeCommandMixin is enabled, overwriting vanilla time command behavior.
+[13Oct2026 10:00:37.088] [main/ERROR] [net.minecraftforge.fml.loading.RuntimeDistCleaner/DISTXFORM]: Attempted to load class net/minecraft/client/gui/screens/inventory/AbstractContainerScreen for invalid dist DEDICATED_SERVER
+[13Oct2026 10:00:37.088] [main/WARN] [mixin/]: Error loading class: net/minecraft/client/gui/screens/inventory/AbstractContainerScreen (java.lang.RuntimeException: Attempted to load class net/minecraft/client/gui/screens/inventory/AbstractContainerScreen for invalid dist DEDICATED_SERVER)
+[13Oct2026 10:00:37.088] [main/WARN] [mixin/]: @Mixin target net.minecraft.client.gui.screens.inventory.AbstractContainerScreen was not found itemborders.mixins.json:AbstractContainerScreenMixin
+[13Oct2026 10:00:37.090] [main/ERROR] [net.minecraftforge.fml.loading.RuntimeDistCleaner/DISTXFORM]: Attempted to load class net/minecraft/client/gui/Gui for invalid dist DEDICATED_SERVER
+[13Oct2026 10:00:37.090] [main/WARN] [mixin/]: Error loading class: net/minecraft/client/gui/Gui (java.lang.RuntimeException: Attempted to load class net/minecraft/client/gui/Gui for invalid dist DEDICATED_SERVER)
+[13Oct2026 10:00:37.090] [main/WARN] [mixin/]: @Mixin target net.minecraft.client.gui.Gui was not found itemborders.mixins.json:GuiMixin
+[13Oct2026 10:00:37.131] [main/INFO] [memoryleakfix/]: [MemoryLeakFix] Will be applying 1 memory leak fixes!
+[13Oct2026 10:00:37.131] [main/INFO] [memoryleakfix/]: [MemoryLeakFix] Currently enabled memory leak fixes: [biomeTemperatureLeak]
+[13Oct2026 10:00:37.182] [main/ERROR] [net.minecraftforge.fml.loading.RuntimeDistCleaner/DISTXFORM]: Attempted to load class net/minecraft/client/renderer/texture/SpriteContents$InterpolationData for invalid dist DEDICATED_SERVER
+[13Oct2026 10:00:37.183] [main/WARN] [mixin/]: Error loading class: net/minecraft/client/renderer/texture/SpriteContents$InterpolationData (java.lang.RuntimeException: Attempted to load class net/minecraft/client/renderer/texture/SpriteContents$InterpolationData for invalid dist DEDICATED_SERVER)
+[13Oct2026 10:00:37.183] [main/WARN] [mixin/]: @Mixin target net.minecraft.client.renderer.texture.SpriteContents$InterpolationData was not found fusion.mixins.json:embeddium.SpriteContentsInterpolationDataMixinEmbeddium
+[13Oct2026 10:00:37.195] [main/ERROR] [net.minecraftforge.fml.loading.RuntimeDistCleaner/DISTXFORM]: Attempted to load class net/minecraft/client/Camera for invalid dist DEDICATED_SERVER
+[13Oct2026 10:00:37.195] [main/WARN] [mixin/]: Error loading class: net/minecraft/client/Camera (java.lang.RuntimeException: Attempted to load class net/minecraft/client/Camera for invalid dist DEDICATED_SERVER)
+[13Oct2026 10:00:37.195] [main/WARN] [mixin/]: @Mixin target net.minecraft.client.Camera was not found cameraoverhaul.mixins.json:CameraMixin
+[13Oct2026 10:00:37.196] [main/ERROR] [net.minecraftforge.fml.loading.RuntimeDistCleaner/DISTXFORM]: Attempted to load class net/minecraft/client/renderer/GameRenderer for invalid dist DEDICATED_SERVER
+[13Oct2026 10:00:37.196] [main/WARN] [mixin/]: Error loading class: net/minecraft/client/renderer/GameRenderer (java.lang.RuntimeException: Attempted to load class net/minecraft/client/renderer/GameRenderer for invalid dist DEDICATED_SERVER)
+[13Oct2026 10:00:37.196] [main/WARN] [mixin/]: @Mixin target net.minecraft.client.renderer.GameRenderer was not found cameraoverhaul.mixins.json:GameRendererMixin
+[13Oct2026 10:00:37.197] [main/ERROR] [net.minecraftforge.fml.loading.RuntimeDistCleaner/DISTXFORM]: Attempted to load class net/minecraft/client/player/LocalPlayer for invalid dist DEDICATED_SERVER
+[13Oct2026 10:00:37.197] [main/WARN] [mixin/]: Error loading class: net/minecraft/client/player/LocalPlayer (java.lang.RuntimeException: Attempted to load class net/minecraft/client/player/LocalPlayer for invalid dist DEDICATED_SERVER)
+[13Oct2026 10:00:37.197] [main/WARN] [mixin/]: @Mixin target net.minecraft.client.player.LocalPlayer was not found cameraoverhaul.mixins.json:LocalPlayerMixin
+[13Oct2026 10:00:37.222] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.3).
+[13Oct2026 10:00:37.385] [main/INFO] [mixin/]: Mixing server.MixinDedicatedServer from mixins/common/nochatreports.mixins.json into net.minecraft.server.dedicated.DedicatedServer
+[13Oct2026 10:00:37.432] [main/INFO] [Smooth Boot (Reloaded)/]: Smooth Boot (Reloaded) config initialized
+[13Oct2026 10:00:37.630] [main/INFO] [net.minecraft.server.Bootstrap/]: ModernFix reached bootstrap stage (7.191 s after launch)
+[13Oct2026 10:00:37.755] [main/INFO] [mixin/]: Mixing common.MixinFriendlyByteBuf from mixins/common/nochatreports.mixins.json into net.minecraft.network.FriendlyByteBuf
+[13Oct2026 10:00:37.755] [main/INFO] [mixin/]: Renaming synthetic method lambda$onWriteJsonWithCodec$1(Ljava/lang/Object;Ljava/lang/String;)Lio/netty/handler/codec/EncoderException; to md6dd9e8$lambda$onWriteJsonWithCodec$1$0 in mixins/common/nochatreports.mixins.json:common.MixinFriendlyByteBuf
+[13Oct2026 10:00:37.755] [main/INFO] [mixin/]: Renaming synthetic method lambda$onReadJsonWithCodec$0(Ljava/lang/String;)Lio/netty/handler/codec/DecoderException; to md6dd9e8$lambda$onReadJsonWithCodec$0$1 in mixins/common/nochatreports.mixins.json:common.MixinFriendlyByteBuf
+[13Oct2026 10:00:37.830] [main/WARN] [mixin/]: @Final field delegatesByName:Ljava/util/Map; in modernfix-modernfix.mixins.json:perf.forge_registry_alloc.ForgeRegistryMixin should be final
+[13Oct2026 10:00:37.831] [main/WARN] [mixin/]: @Final field delegatesByValue:Ljava/util/Map; in modernfix-modernfix.mixins.json:perf.forge_registry_alloc.ForgeRegistryMixin should be final
+[13Oct2026 10:00:38.849] [main/INFO] [net.minecraft.server.Bootstrap/]: Vanilla bootstrap took 1216 milliseconds
+[13Oct2026 10:00:39.655] [main/WARN] [mixin/]: @Final field f_26027_:Lnet/minecraft/world/entity/ai/targeting/TargetingConditions; in guardvillagers.mixins.json:DefendVillageGoalGolemMixin should be final
+[13Oct2026 10:00:39.873] [main/INFO] [mixin/]: Mixing server.MixinServerGamePacketListenerImpl from mixins/common/nochatreports.mixins.json into net.minecraft.server.network.ServerGamePacketListenerImpl
+[13Oct2026 10:00:40.241] [main/WARN] [mixin/]: Static binding violation: PRIVATE @Overwrite method m_47505_ in modernfix-modernfix.mixins.json:perf.remove_biome_temperature_cache.BiomeMixin cannot reduce visibiliy of PUBLIC target method, visibility will be upgraded.
+[13Oct2026 10:00:40.421] [main/INFO] [org.groovymc.gml.internal.ModExtensionLoader/]: Skipping extension class org.groovymc.cgl.api.extension.client.MinecraftExtensions: it requires dist CLIENT, but we're running on DEDICATED_SERVER
+[13Oct2026 10:00:40.629] [modloading-worker-0/INFO] [STDOUT/]: [net.rkeblawi.qualitysounds.sound.ModSoundEvents:registerSounds:550]: Registering Sounds for qualitysounds
+[13Oct2026 10:00:40.635] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/container/config/guardvillagers-common.toml is not correct. Correcting
+[13Oct2026 10:00:40.691] [modloading-worker-0/INFO] [mixin/]: Mixing server.MixinPlayerList from mixins/common/nochatreports.mixins.json into net.minecraft.server.players.PlayerList
+[13Oct2026 10:00:40.972] [modloading-worker-0/INFO] [gml/]: Initialised GML mod. Version: 4.0.10
+[13Oct2026 10:00:40.974] [modloading-worker-0/INFO] [Advanced Wall Climber API/]: Advanced Wall Climber API initialized!
+[13Oct2026 10:00:40.999] [modloading-worker-0/INFO] [noisium/]: Loading Noisium.
+[13Oct2026 10:00:41.069] [modloading-worker-0/INFO] [unilib/]: Disabling UniLib, as it is client side only.
+[13Oct2026 10:00:41.075] [modloading-worker-0/INFO] [Puzzles Lib/]: Constructing common components for netherchested:main
+[13Oct2026 10:00:41.078] [modloading-worker-0/INFO] [Puzzles Lib/]: Constructing common components for betteranimationscollection:main
+[13Oct2026 10:00:41.092] [modloading-worker-0/INFO] [Puzzles Lib/]: Constructing common components for puzzlesapi:iteminteractions
+[13Oct2026 10:00:41.173] [modloading-worker-0/INFO] [Puzzles Lib/]: Constructing common components for puzzlesapi:slotcycling
+[13Oct2026 10:00:41.174] [modloading-worker-0/INFO] [Puzzles Lib/]: Constructing common components for puzzlesapi:limitlesscontainers
+[13Oct2026 10:00:41.178] [modloading-worker-0/INFO] [Puzzles Lib/]: Constructing common components for puzzlesapi:statues
+[13Oct2026 10:00:41.276] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 47.4.26, for MC 1.20.1 with MCP 20230612.114412
+[13Oct2026 10:00:41.276] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v47.4.26 Initialized
+[13Oct2026 10:00:41.293] [modloading-worker-0/INFO] [de.keksuccino.drippyloadingscreen.DrippyLoadingScreen/]: [DRIPPY LOADING SCREEN] Loading v3.1.5 in server-side mode on FORGE!
+[13Oct2026 10:00:41.381] [modloading-worker-0/INFO] [STDOUT/]: [yalter.mousetweaks.Logger:Log:6]: [Mouse Tweaks] Disabled because not running on the client.
+[13Oct2026 10:00:41.381] [modloading-worker-0/INFO] [NoChatReports/]: KONNICHIWA ZA WARUDO!
+[13Oct2026 10:00:41.381] [modloading-worker-0/INFO] [NoChatReports/]: Default JVM text encoding is: UTF-8
+[13Oct2026 10:00:41.382] [modloading-worker-0/INFO] [NoChatReports/]: Reading config file NoChatReports/NCR-Common.json...
+[13Oct2026 10:00:41.383] [modloading-worker-0/INFO] [NoChatReports/]: Writing config file NoChatReports/NCR-Common.json...
+[13Oct2026 10:00:41.467] [modloading-worker-0/INFO] [xaero.common.HudMod/]: Registering common data for channel xaerominimap:main!
+[13Oct2026 10:00:41.477] [modloading-worker-0/INFO] [Puzzles Lib/]: Constructing common components for puzzleslib:main
+[13Oct2026 10:00:41.485] [modloading-worker-0/INFO] [xaero.common.HudMod/]: Loading primary common config for channel xaerominimap:main!
+[13Oct2026 10:00:41.487] [modloading-worker-0/INFO] [xaero.common.HudMod/]: Loading server config profiles for channel xaerominimap:main!
+[13Oct2026 10:00:41.505] [modloading-worker-0/INFO] [xaero.map.WorldMap/]: Registering common data for channel xaeroworldmap:main!
+[13Oct2026 10:00:41.508] [modloading-worker-0/INFO] [xaero.map.WorldMap/]: Loading primary common config for channel xaeroworldmap:main!
+[13Oct2026 10:00:41.508] [modloading-worker-0/INFO] [xaero.map.WorldMap/]: Loading server config profiles for channel xaeroworldmap:main!
+[13Oct2026 10:00:41.524] [modloading-worker-0/INFO] [net.blay09.mods.balm.forge.config.ForgeBalmConfig/]: Registering config for cookingforblockheads:common (COMMON) with 11 properties.
+[13Oct2026 10:00:41.604] [modloading-worker-0/INFO] [thedarkcolour.kotlinforforge.test.KotlinForForge/]: Kotlin For Forge Enabled!
+[13Oct2026 10:00:41.606] [modloading-worker-0/INFO] [de.keksuccino.melody.Melody/]: [MELODY] Disabling Melody since it's loaded server-side.
+[13Oct2026 10:00:41.610] [modloading-worker-0/INFO] [Bookshelf/]: Fixing MC-151457. Crafting remainder for minecraft:pufferfish_bucket is now minecraft:bucket.
+[13Oct2026 10:00:41.610] [modloading-worker-0/INFO] [Bookshelf/]: Fixing MC-151457. Crafting remainder for minecraft:salmon_bucket is now minecraft:bucket.
+[13Oct2026 10:00:41.610] [modloading-worker-0/INFO] [Bookshelf/]: Fixing MC-151457. Crafting remainder for minecraft:cod_bucket is now minecraft:bucket.
+[13Oct2026 10:00:41.610] [modloading-worker-0/INFO] [Bookshelf/]: Fixing MC-151457. Crafting remainder for minecraft:tropical_fish_bucket is now minecraft:bucket.
+[13Oct2026 10:00:41.610] [modloading-worker-0/INFO] [Bookshelf/]: Fixing MC-151457. Crafting remainder for minecraft:axolotl_bucket is now minecraft:bucket.
+[13Oct2026 10:00:41.610] [modloading-worker-0/INFO] [Bookshelf/]: Fixing MC-151457. Crafting remainder for minecraft:powder_snow_bucket is now minecraft:bucket.
+[13Oct2026 10:00:41.610] [modloading-worker-0/INFO] [Bookshelf/]: Fixing MC-151457. Crafting remainder for minecraft:tadpole_bucket is now minecraft:bucket.
+[13Oct2026 10:00:41.668] [modloading-worker-0/INFO] [de.keksuccino.konkrete.Konkrete/]: [KONKRETE] Successfully initialized!
+[13Oct2026 10:00:41.668] [modloading-worker-0/INFO] [de.keksuccino.konkrete.Konkrete/]: [KONKRETE] Server-side libs ready to use!
+[13Oct2026 10:00:41.804] [modloading-worker-0/INFO] [Collective/]: Loading Collective version 8.44.
+[13Oct2026 10:00:41.876] [modloading-worker-0/WARN] [fzzy_config/]: >>>>>>>>>>>>>>>
+[13Oct2026 10:00:41.877] [modloading-worker-0/WARN] [fzzy_config/]: Error(s) found while deserializing config [particle_core_config]!
+[13Oct2026 10:00:41.877] [modloading-worker-0/WARN] [fzzy_config/]:   Critical Deserialization Error: Exception encountered while deserializing TOML
+java.lang.NoClassDefFoundError: net/minecraft/client/ParticleStatus
+	at java.lang.Class.getDeclaredMethods0(Native Method) ~[?:?]
+	at java.lang.Class.privateGetDeclaredMethods(Class.java:3580) ~[?:?]
+	at java.lang.Class.getDeclaredMethod(Class.java:2848) ~[?:?]
+	at kotlin.reflect.jvm.internal.KDeclarationContainerImpl.tryGetMethod(KDeclarationContainerImpl.kt:189) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.reflect.jvm.internal.KDeclarationContainerImpl.lookupMethod(KDeclarationContainerImpl.kt:166) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.reflect.jvm.internal.KDeclarationContainerImpl.findMethodBySignature(KDeclarationContainerImpl.kt:218) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.reflect.jvm.internal.KPropertyImplKt.computeCallerForAccessor(KPropertyImpl.kt:263) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.reflect.jvm.internal.KPropertyImplKt.access$computeCallerForAccessor(KPropertyImpl.kt:1) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.reflect.jvm.internal.KPropertyImpl$Getter.caller_delegate$lambda$0(KPropertyImpl.kt:180) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.reflect.jvm.internal.KPropertyImpl$Getter.accessor$KPropertyImpl$Getter$lambda1(KPropertyImpl.kt) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.reflect.jvm.internal.KPropertyImpl$Getter$$Lambda$1.invoke(Unknown Source) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.SafePublicationLazyImpl.getValue(LazyJVM.kt:125) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.reflect.jvm.internal.KPropertyImpl$Getter.getCaller(KPropertyImpl.kt:179) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.reflect.jvm.ReflectJvmMapping.getJavaMethod(ReflectJvmMapping.kt:60) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.reflect.jvm.ReflectJvmMapping.getJavaGetter(ReflectJvmMapping.kt:45) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at me.fzzyhmstrs.fzzy_config.impl.ConfigApiImpl.trySetAccessible(ConfigApiImpl.kt:1143) ~[fzzy_config-0.7.7+1.20.1+forge.jar%23308!/:?]
+	at me.fzzyhmstrs.fzzy_config.impl.ConfigApiImpl.deserializeFromToml$fzzy_config(ConfigApiImpl.kt:634) ~[fzzy_config-0.7.7+1.20.1+forge.jar%23308!/:?]
+	at me.fzzyhmstrs.fzzy_config.impl.ConfigApiImpl.deserializeConfig$fzzy_config(ConfigApiImpl.kt:749) ~[fzzy_config-0.7.7+1.20.1+forge.jar%23308!/:?]
+	at me.fzzyhmstrs.fzzy_config.impl.ConfigApiImpl.readOrCreateAndValidate$fzzy_config(ConfigApiImpl.kt:297) ~[fzzy_config-0.7.7+1.20.1+forge.jar%23308!/:?]
+	at me.fzzyhmstrs.fzzy_config.impl.ConfigApiImpl.readOrCreateAndValidate$fzzy_config$default(ConfigApiImpl.kt:271) ~[fzzy_config-0.7.7+1.20.1+forge.jar%23308!/:?]
+	at me.fzzyhmstrs.fzzy_config.impl.ConfigApiImpl.registerAndLoadClient(ConfigApiImpl.kt:218) ~[fzzy_config-0.7.7+1.20.1+forge.jar%23308!/:?]
+	at me.fzzyhmstrs.fzzy_config.impl.ConfigApiImpl.registerAndLoadConfig$fzzy_config(ConfigApiImpl.kt:207) ~[fzzy_config-0.7.7+1.20.1+forge.jar%23308!/:?]
+	at me.fzzyhmstrs.fzzy_config.impl.ConfigApiImpl.registerAndLoadConfig$fzzy_config$default(ConfigApiImpl.kt:203) ~[fzzy_config-0.7.7+1.20.1+forge.jar%23308!/:?]
+	at me.fzzyhmstrs.fzzy_config.api.ConfigApi.registerAndLoadConfig(ConfigApi.kt:117) ~[fzzy_config-0.7.7+1.20.1+forge.jar%23308!/:?]
+	at me.fzzyhmstrs.particle_core.PcConfig.<clinit>(PcConfig.kt:35) ~[particle_core-0.3.3+1.20.1+forge.jar%23348!/:?]
+	at me.fzzyhmstrs.particle_core.ParticleCoreForge.<init>(PcConfig.kt:19) ~[particle_core-0.3.3+1.20.1+forge.jar%23348!/:?]
+	at jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62) ~[?:?]
+	at java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:502) ~[?:?]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:486) ~[?:?]
+	at net.minecraftforge.fml.javafmlmod.FMLModContainer.constructMod(FMLModContainer.java:77) ~[javafmllanguage-1.20.1-47.4.26.jar%23397!/:?]
+	at net.minecraftforge.fml.ModContainer.lambda$buildTransitionHandler$5(ModContainer.java:126) ~[fmlcore-1.20.1-47.4.26.jar%23396!/:?]
+	at java.util.concurrent.CompletableFuture$AsyncRun.run(CompletableFuture.java:1804) ~[?:?]
+	at java.util.concurrent.CompletableFuture$AsyncRun.exec(CompletableFuture.java:1796) ~[?:?]
+	at java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387) ~[?:?]
+	at java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1312) ~[?:?]
+	at java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1843) ~[?:?]
+	at java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1808) ~[?:?]
+	at java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188) ~[?:?]
+Caused by: java.lang.ClassNotFoundException: net.minecraft.client.ParticleStatus
+	at cpw.mods.cl.ModuleClassLoader.loadClass(ModuleClassLoader.java:141) ~[securejarhandler-2.1.10.jar:?]
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:526) ~[?:?]
+	... 38 more
+[13Oct2026 10:00:41.878] [modloading-worker-0/WARN] [fzzy_config/]: >>>>>>>>>>>>>>>
+[13Oct2026 10:00:41.880] [modloading-worker-0/INFO] [fzzy_config/]: Loaded config :particle_core_config in 194ms
+[13Oct2026 10:00:41.974] [Fzzy Config Worker-1/WARN] [fzzy_config/]: >>>>>>>>>>>>>>>
+[13Oct2026 10:00:41.974] [Fzzy Config Worker-1/WARN] [fzzy_config/]: Error(s) encountered while re-serializing corrected config [particle_core_config]! Output may not be complete.
+[13Oct2026 10:00:41.974] [Fzzy Config Worker-1/WARN] [fzzy_config/]:   Critical Serialization Error: Exception encountered while serializing config, output may not be complete!
+java.lang.NoClassDefFoundError: net/minecraft/client/ParticleStatus
+	at java.lang.Class.getDeclaredMethods0(Native Method) ~[?:?]
+	at java.lang.Class.privateGetDeclaredMethods(Class.java:3580) ~[?:?]
+	at java.lang.Class.getDeclaredMethod(Class.java:2848) ~[?:?]
+	at kotlin.reflect.jvm.internal.KDeclarationContainerImpl.tryGetMethod(KDeclarationContainerImpl.kt:189) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.reflect.jvm.internal.KDeclarationContainerImpl.lookupMethod(KDeclarationContainerImpl.kt:166) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.reflect.jvm.internal.KDeclarationContainerImpl.findMethodBySignature(KDeclarationContainerImpl.kt:218) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.reflect.jvm.internal.KPropertyImplKt.computeCallerForAccessor(KPropertyImpl.kt:263) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.reflect.jvm.internal.KPropertyImplKt.access$computeCallerForAccessor(KPropertyImpl.kt:1) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.reflect.jvm.internal.KPropertyImpl$Getter.caller_delegate$lambda$0(KPropertyImpl.kt:180) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.reflect.jvm.internal.KPropertyImpl$Getter.accessor$KPropertyImpl$Getter$lambda1(KPropertyImpl.kt) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.reflect.jvm.internal.KPropertyImpl$Getter$$Lambda$1.invoke(Unknown Source) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.SafePublicationLazyImpl.getValue(LazyJVM.kt:125) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.reflect.jvm.internal.KPropertyImpl$Getter.getCaller(KPropertyImpl.kt:179) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.reflect.jvm.ReflectJvmMapping.getJavaMethod(ReflectJvmMapping.kt:60) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.reflect.jvm.ReflectJvmMapping.getJavaGetter(ReflectJvmMapping.kt:45) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at kotlin.reflect.jvm.KCallablesJvm.isAccessible(KCallablesJvm.kt:44) ~[kotlinforforge-4.12.0-all.jar%23327!/:?]
+	at me.fzzyhmstrs.fzzy_config.impl.ConfigApiImpl.trySetAccessible(ConfigApiImpl.kt:1141) ~[fzzy_config-0.7.7+1.20.1+forge.jar%23308!/:?]
+	at me.fzzyhmstrs.fzzy_config.impl.ConfigApiImpl.serializeToToml$fzzy_config(ConfigApiImpl.kt:499) ~[fzzy_config-0.7.7+1.20.1+forge.jar%23308!/:?]
+	at me.fzzyhmstrs.fzzy_config.impl.ConfigApiImpl.serializeConfig$fzzy_config(ConfigApiImpl.kt:560) ~[fzzy_config-0.7.7+1.20.1+forge.jar%23308!/:?]
+	at me.fzzyhmstrs.fzzy_config.impl.ConfigApiImpl.serializeConfig$fzzy_config$default(ConfigApiImpl.kt:559) ~[fzzy_config-0.7.7+1.20.1+forge.jar%23308!/:?]
+	at me.fzzyhmstrs.fzzy_config.impl.ConfigApiImpl.writeFile$lambda$53(ConfigApiImpl.kt:1064) ~[fzzy_config-0.7.7+1.20.1+forge.jar%23308!/:?]
+	at java.util.concurrent.CompletableFuture$AsyncRun.run(CompletableFuture.java:1804) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642) ~[?:?]
+	at java.lang.Thread.run(Thread.java:1583) ~[?:?]
+Caused by: java.lang.ClassNotFoundException: net.minecraft.client.ParticleStatus
+	at cpw.mods.cl.ModuleClassLoader.loadClass(ModuleClassLoader.java:141) ~[securejarhandler-2.1.10.jar:?]
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:526) ~[?:?]
+	... 25 more
+[13Oct2026 10:00:41.974] [Fzzy Config Worker-1/WARN] [fzzy_config/]: >>>>>>>>>>>>>>>
+[13Oct2026 10:00:41.990] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering C2S receiver with id architectury:sync_ids
+[13Oct2026 10:00:41.991] [modloading-worker-0/INFO] [unilib/]: Disabling CraftPresence, as it is client side only.
+[13Oct2026 10:00:41.997] [modloading-worker-0/INFO] [fallingtrees | Config/]: Successfully loaded config 'fallingtrees_common'
+[13Oct2026 10:00:41.998] [modloading-worker-0/INFO] [fallingtrees | Config/]: Successfully saved config 'fallingtrees_common'
+[13Oct2026 10:00:42.009] [modloading-worker-0/INFO] [xaero.lib.XaeroLib/]: Registering common data for channel xaerolib:main!
+[13Oct2026 10:00:42.010] [modloading-worker-0/INFO] [xaero.lib.XaeroLib/]: Loading primary common config for channel xaerolib:main!
+[13Oct2026 10:00:42.011] [modloading-worker-0/INFO] [xaero.lib.XaeroLib/]: Loading server config profiles for channel xaerolib:main!
+[13Oct2026 10:00:42.014] [modloading-worker-0/INFO] [chloride/Main]: Chloride is not intended to be on servers, loaded in inner mode
+[13Oct2026 10:00:42.095] [modloading-worker-0/INFO] [spawnanimations/]: [Spawn Animations] Registering server started event ...
+[13Oct2026 10:00:42.100] [modloading-worker-0/INFO] [de.keksuccino.fancymenu.FancyMenu/]: [FANCYMENU] Loading v3.9.14 in server-side mode on FORGE!
+[13Oct2026 10:00:42.109] [modloading-worker-0/INFO] [YetAnotherConfigLib/]: Deserializing YACLConfig from '/home/container/config/yacl.json5'
+[13Oct2026 10:00:42.112] [modloading-worker-0/INFO] [me.treyruffy.betterf3.BetterF3Forge/]: [BetterF3] Starting...
+[13Oct2026 10:00:42.113] [modloading-worker-0/WARN] [me.treyruffy.betterf3.BetterF3Forge/]: [BetterF3] Not supported on dedicated server!
+[13Oct2026 10:00:42.175] [Collective Update Checker/WARN] [Collective/]: [Update] Collective has an update available: 8.44 -> 8.47
+[13Oct2026 10:00:42.876] [main/INFO] [Moonlight/]: Initialized block sets in 7ms
+[13Oct2026 10:00:42.969] [main/INFO] [ModernFix/]: Bypassed Mojang DFU
+[13Oct2026 10:00:42.969] [main/INFO] [ModernFix/]: Instantiating Mojang DFU
+[13Oct2026 10:00:43.400] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/container/config/guardvillagers-common.toml is not correct. Correcting
+[13Oct2026 10:00:43.410] [main/INFO] [Distant Friends/]: Refreshing friends cache
+[13Oct2026 10:00:43.425] [modloading-worker-0/INFO] [voicechat/]: [voicechat] Compatibility version 20
+[13Oct2026 10:00:43.426] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [saturn] Starting version check at https://github.com/AbdElAziz333/Saturn/raw/mc1.20.1/dev/updates.json
+[13Oct2026 10:00:43.513] [modloading-worker-0/INFO] [CorgiLib/]: Initializing network...
+[13Oct2026 10:00:43.514] [modloading-worker-0/INFO] [CorgiLib/]: Initialized network!
+[13Oct2026 10:00:43.531] [modloading-worker-0/INFO] [xaero.lib.XaeroLib/]: Loading XaeroLib common 1/2!
+[13Oct2026 10:00:43.532] [modloading-worker-0/INFO] [voicechat/]: [voicechat] Loading plugins
+[13Oct2026 10:00:43.534] [modloading-worker-0/INFO] [voicechat/]: [voicechat] Loaded 1 plugin(s)
+[13Oct2026 10:00:43.534] [modloading-worker-0/INFO] [voicechat/]: [voicechat] Initializing plugins
+[13Oct2026 10:00:43.536] [modloading-worker-0/INFO] [net.tschipcraft.make_bubbles_pop.MakeBubblesPop/]: MidnightLib detected!
+[13Oct2026 10:00:43.538] [modloading-worker-0/INFO] [STDOUT/]: [toni.lib.TxniLib:onInitialize:75]: TxniLib onInitialize!
+[13Oct2026 10:00:43.539] [modloading-worker-0/INFO] [Sound Physics - General/]: Initializing Simple Voice Chat integration
+[13Oct2026 10:00:43.539] [modloading-worker-0/INFO] [voicechat/]: [voicechat] Initialized 1 plugin(s)
+[13Oct2026 10:00:43.540] [modloading-worker-0/INFO] [voicechat/]: [voicechat] Registering events for 'sound_physics_remastered'
+[13Oct2026 10:00:43.542] [modloading-worker-0/INFO] [net.tschipcraft.make_bubbles_pop.MakeBubblesPop/]: Make Bubbles Pop by Tschipcraft initialized!
+[13Oct2026 10:00:43.542] [modloading-worker-0/INFO] [spawnanimations/]: [Spawn Animations] MidnightLib detected!
+[13Oct2026 10:00:43.544] [modloading-worker-0/INFO] [spawnanimations/]: [Spawn Animations] Loaded Spawn Animations by Tschipcraft successfully!
+[13Oct2026 10:00:43.555] [Forge Version Check/WARN] [net.minecraftforge.fml.VersionChecker/]: Failed to process update information
+com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 9 column 1 path $
+	at com.google.gson.Gson.fromJson(Gson.java:1226) ~[gson-2.10.jar%2372!/:?]
+	at com.google.gson.Gson.fromJson(Gson.java:1124) ~[gson-2.10.jar%2372!/:?]
+	at com.google.gson.Gson.fromJson(Gson.java:1034) ~[gson-2.10.jar%2372!/:?]
+	at com.google.gson.Gson.fromJson(Gson.java:969) ~[gson-2.10.jar%2372!/:?]
+	at net.minecraftforge.fml.VersionChecker$1.process(VersionChecker.java:186) ~[fmlcore-1.20.1-47.4.26.jar%23396!/:?]
+	at java.lang.Iterable.forEach(Iterable.java:75) ~[?:?]
+	at net.minecraftforge.fml.VersionChecker$1.run(VersionChecker.java:117) ~[fmlcore-1.20.1-47.4.26.jar%23396!/:?]
+Caused by: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 9 column 1 path $
+	at com.google.gson.stream.JsonReader.beginObject(JsonReader.java:393) ~[gson-2.10.jar%2372!/:?]
+	at com.google.gson.internal.bind.MapTypeAdapterFactory$Adapter.read(MapTypeAdapterFactory.java:182) ~[gson-2.10.jar%2372!/:?]
+	at com.google.gson.internal.bind.MapTypeAdapterFactory$Adapter.read(MapTypeAdapterFactory.java:144) ~[gson-2.10.jar%2372!/:?]
+	at com.google.gson.Gson.fromJson(Gson.java:1214) ~[gson-2.10.jar%2372!/:?]
+	... 6 more
+[13Oct2026 10:00:43.555] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [guardvillagers] Starting version check at https://raw.githubusercontent.com/seymourimadeit/guardvillagers/master/update.json
+[13Oct2026 10:00:43.581] [main/INFO] [Supplementaries/]: Finished mod setup in: [0, 1, 0, 0, 0, 0, 6, 0] ms
+[13Oct2026 10:00:43.608] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [guardvillagers] Found status: BETA Current: 1.20.1-1.6.19 Target: 1.20-1.6.5
+[13Oct2026 10:00:43.608] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [supplementaries] Starting version check at https://api.modrinth.com/updates/supplementaries/forge_updates.json
+[13Oct2026 10:00:43.638] [main/INFO] [Moonlight/]: Initialized color sets in 15ms
+[13Oct2026 10:00:43.639] [main/ERROR] [Moonlight/]: Fabric API detected! This is not a Fabric mod, so please dont report related issues to MoonlightLib or its dependant. This can usually happen with connector or when having a mod that does NOT have a proper Forge native implementation. This can easily lead to poor compatibility and issues. Proceed ar your own risk. 
+ Mods that bundled Fabric API: [net.minecraftforge.fml.loading.moddiscovery.ModInfo@d5e575c]
+[13Oct2026 10:00:43.640] [modloading-worker-0/INFO] [xaero.minimap.XaeroMinimap/]: Loading Xaero's Minimap - Stage 1/2 (Server)
+[13Oct2026 10:00:43.640] [modloading-worker-0/INFO] [xaero.map.server.WorldMapServer/]: Loading Xaero's World Map - Stage 1/2 (Server)
+[13Oct2026 10:00:43.641] [modloading-worker-0/INFO] [xaero.lib.XaeroLib/]: Loading XaeroLib server 1/2!
+[13Oct2026 10:00:43.641] [main/INFO] [xaero.map.server.WorldMapServer/]: Loading Xaero's World Map - Stage 2/2 (Server)
+[13Oct2026 10:00:43.641] [main/INFO] [xaero.minimap.XaeroMinimap/]: Loading Xaero's Minimap - Stage 2/2 (Server)
+[13Oct2026 10:00:43.642] [main/INFO] [xaero.lib.XaeroLib/]: Loading XaeroLib common 2/2!
+[13Oct2026 10:00:43.642] [main/INFO] [xaero.lib.XaeroLib/]: Loading XaeroLib server 2/2!
+[13Oct2026 10:00:43.673] [modloading-worker-0/INFO] [AttributeFix/]: Loaded values for 19 compatible attributes.
+[13Oct2026 10:00:43.674] [modloading-worker-0/INFO] [AttributeFix/]: Loaded 19 values from config.
+[13Oct2026 10:00:43.675] [modloading-worker-0/INFO] [AttributeFix/]: Saving config file. 19 entries.
+[13Oct2026 10:00:43.676] [modloading-worker-0/INFO] [AttributeFix/]: Applying changes for 19 attributes.
+[13Oct2026 10:00:43.698] [modloading-worker-0/INFO] [Jade/]: Start loading plugin at net.blay09.mods.balm.forge.compat.hudinfo.ForgeJadeModCompat
+[13Oct2026 10:00:43.703] [modloading-worker-0/INFO] [Jade/]: Start loading plugin at io.github.mortuusars.exposure.integration.jade.ExposureJadePlugin
+[13Oct2026 10:00:43.705] [modloading-worker-0/INFO] [Jade/]: Start loading plugin at net.mehvahdjukaar.supplementaries.integration.JadeCompat
+[13Oct2026 10:00:43.705] [modloading-worker-0/INFO] [Jade/]: Start loading plugin at de.maxhenkel.gravestone.integration.waila.PluginGraveStone
+[13Oct2026 10:00:43.706] [modloading-worker-0/INFO] [Jade/]: Start loading plugin at net.blay09.mods.cookingforblockheads.compat.ForgeJadeCookingForBlockheadsPlugin
+[13Oct2026 10:00:43.706] [modloading-worker-0/INFO] [Jade/]: Start loading plugin at snownee.jade.addon.vanilla.VanillaPlugin
+[13Oct2026 10:00:43.712] [modloading-worker-0/INFO] [Jade/]: Start loading plugin at snownee.jade.addon.universal.UniversalPlugin
+[13Oct2026 10:00:43.714] [modloading-worker-0/INFO] [Jade/]: Start loading plugin at snownee.jade.addon.core.CorePlugin
+[13Oct2026 10:00:43.778] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [supplementaries] Found status: OUTDATED Current: 1.20-3.1.43 Target: 1.20-3.1.44-forge
+[13Oct2026 10:00:43.778] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [gml] Starting version check at https://maven.moddinginquisition.org/releases/org/groovymc/gml/gml/forge-promotions.json
+[13Oct2026 10:00:43.852] [main/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[13Oct2026 10:00:43.892] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [gml] Found status: BETA Current: 4.0.10 Target: null
+[13Oct2026 10:00:43.892] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [toolstats] Starting version check at https://updates.blamejared.com/get?n=toolstats&gv=1.20.1
+[13Oct2026 10:00:43.973] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [toolstats] Found status: BETA Current: 16.0.10 Target: 16.0.10
+[13Oct2026 10:00:43.973] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [highlighter] Starting version check at https://mc-update-check.anthonyhilyard.com/521590
+[13Oct2026 10:00:44.043] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/container/libraries/net/minecraft/server/1.20.1-20230612.114412/server-1.20.1-20230612.114412-srg.jar%23395!/assets/.mcassetsroot' uses unexpected schema
+[13Oct2026 10:00:44.043] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/container/libraries/net/minecraft/server/1.20.1-20230612.114412/server-1.20.1-20230612.114412-srg.jar%23395!/data/.mcassetsroot' uses unexpected schema
+[13Oct2026 10:00:44.108] [main/INFO] [Moonlight/]: Starting runtime resource generation for pack type SERVER_DATA with generators from mods [supplementaries, suppsquared]: [net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator@465f0ccd, net.mehvahdjukaar.suppsquared.common.ServerPackProvider@5d51c542]
+[13Oct2026 10:00:44.108] [main/INFO] [Moonlight/]: Generating runtime assets for pack Supplementaries Generated Pack (supplementaries)
+[13Oct2026 10:00:44.164] [main/INFO] [Supplementaries/]: Generated runtime SERVER_DATA for pack Supplementaries Generated Pack (supplementaries) in: 55 ms (multithreaded)
+[13Oct2026 10:00:44.164] [main/INFO] [Moonlight/]: Generating runtime assets for pack Suppsquared Generated Pack (suppsquared)
+[13Oct2026 10:00:44.187] [main/INFO] [suppsquared/]: Generated runtime SERVER_DATA for pack Suppsquared Generated Pack (suppsquared) in: 22 ms (multithreaded)
+[13Oct2026 10:00:44.187] [main/INFO] [Moonlight/]: Finished runtime resources generation for 2 packs in a total of 78 ms
+[13Oct2026 10:00:45.280] [Worker-Main-2/ERROR] [net.minecraft.tags.TagLoader/]: Couldn't load tag minecraft:enchantable/durability as it is missing following references: the_knocker:knife (from the_knocker-1.5.2-forge-1.20.1.jar)
+[13Oct2026 10:00:45.683] [main/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Skipping loading recipe supplementaries:inspirations/blackboard_clear as it's serializer returned null
+[13Oct2026 10:00:45.685] [main/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Skipping loading recipe supplementaries:inspirations/flag_clear as it's serializer returned null
+[13Oct2026 10:00:45.707] [main/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Skipping loading recipe supplementaries:inspirations/flag_dye as it's serializer returned null
+[13Oct2026 10:00:45.720] [main/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 9 recipes
+[13Oct2026 10:00:45.720] [main/ERROR] [net.minecraft.server.ServerFunctionLibrary/]: Failed to load function spawnanimations:internal/entity/ehs/pehkui/hide
+java.util.concurrent.CompletionException: java.lang.IllegalArgumentException: Whilst parsing command on line 4: Unknown or incomplete command, see below for error at position 0: <--[HERE]
+	at java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:315) ~[?:?]
+	at java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:320) ~[?:?]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1770) ~[?:?]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.exec(CompletableFuture.java:1760) ~[?:?]
+	at java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387) ~[?:?]
+	at java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1312) ~[?:?]
+	at java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1843) ~[?:?]
+	at java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1808) ~[?:?]
+	at java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188) ~[?:?]
+Caused by: java.lang.IllegalArgumentException: Whilst parsing command on line 4: Unknown or incomplete command, see below for error at position 0: <--[HERE]
+	at net.minecraft.commands.CommandFunction.m_77984_(CommandFunction.java:63) ~[server-1.20.1-20230612.114412-srg.jar%23395!/:?]
+	at net.minecraft.server.ServerFunctionLibrary.m_214320_(ServerFunctionLibrary.java:83) ~[server-1.20.1-20230612.114412-srg.jar%23395!/:?]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1768) ~[?:?]
+	... 6 more
+[13Oct2026 10:00:45.720] [main/ERROR] [net.minecraft.server.ServerFunctionLibrary/]: Failed to load function spawnanimations:internal/entity/ehs/pehkui/enderman/unhide
+java.util.concurrent.CompletionException: java.lang.IllegalArgumentException: Whilst parsing command on line 4: Unknown or incomplete command, see below for error at position 0: <--[HERE]
+	at java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:315) ~[?:?]
+	at java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:320) ~[?:?]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1770) ~[?:?]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.exec(CompletableFuture.java:1760) ~[?:?]
+	at java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387) ~[?:?]
+	at java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1312) ~[?:?]
+	at java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1843) ~[?:?]
+	at java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1808) ~[?:?]
+	at java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188) ~[?:?]
+Caused by: java.lang.IllegalArgumentException: Whilst parsing command on line 4: Unknown or incomplete command, see below for error at position 0: <--[HERE]
+	at net.minecraft.commands.CommandFunction.m_77984_(CommandFunction.java:63) ~[server-1.20.1-20230612.114412-srg.jar%23395!/:?]
+	at net.minecraft.server.ServerFunctionLibrary.m_214320_(ServerFunctionLibrary.java:83) ~[server-1.20.1-20230612.114412-srg.jar%23395!/:?]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1768) ~[?:?]
+	... 6 more
+[13Oct2026 10:00:45.721] [main/ERROR] [net.minecraft.server.ServerFunctionLibrary/]: Failed to load function spawnanimations:internal/entity/ehs/pehkui/set_easing
+java.util.concurrent.CompletionException: java.lang.IllegalArgumentException: Whilst parsing command on line 4: Unknown or incomplete command, see below for error at position 0: <--[HERE]
+	at java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:315) ~[?:?]
+	at java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:320) ~[?:?]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1770) ~[?:?]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.exec(CompletableFuture.java:1760) ~[?:?]
+	at java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387) ~[?:?]
+	at java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1312) ~[?:?]
+	at java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1843) ~[?:?]
+	at java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1808) ~[?:?]
+	at java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188) ~[?:?]
+Caused by: java.lang.IllegalArgumentException: Whilst parsing command on line 4: Unknown or incomplete command, see below for error at position 0: <--[HERE]
+	at net.minecraft.commands.CommandFunction.m_77984_(CommandFunction.java:63) ~[server-1.20.1-20230612.114412-srg.jar%23395!/:?]
+	at net.minecraft.server.ServerFunctionLibrary.m_214320_(ServerFunctionLibrary.java:83) ~[server-1.20.1-20230612.114412-srg.jar%23395!/:?]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1768) ~[?:?]
+	... 6 more
+[13Oct2026 10:00:45.721] [main/ERROR] [net.minecraft.server.ServerFunctionLibrary/]: Failed to load function spawnanimations:internal/entity/ehs/pehkui/unhide
+java.util.concurrent.CompletionException: java.lang.IllegalArgumentException: Whilst parsing command on line 4: Unknown or incomplete command, see below for error at position 0: <--[HERE]
+	at java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:315) ~[?:?]
+	at java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:320) ~[?:?]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1770) ~[?:?]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.exec(CompletableFuture.java:1760) ~[?:?]
+	at java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387) ~[?:?]
+	at java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1312) ~[?:?]
+	at java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1843) ~[?:?]
+	at java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1808) ~[?:?]
+	at java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188) ~[?:?]
+Caused by: java.lang.IllegalArgumentException: Whilst parsing command on line 4: Unknown or incomplete command, see below for error at position 0: <--[HERE]
+	at net.minecraft.commands.CommandFunction.m_77984_(CommandFunction.java:63) ~[server-1.20.1-20230612.114412-srg.jar%23395!/:?]
+	at net.minecraft.server.ServerFunctionLibrary.m_214320_(ServerFunctionLibrary.java:83) ~[server-1.20.1-20230612.114412-srg.jar%23395!/:?]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1768) ~[?:?]
+	... 6 more
+[13Oct2026 10:00:45.721] [main/ERROR] [net.minecraft.server.ServerFunctionLibrary/]: Failed to load function spawnanimations:internal/entity/ehs/pehkui/check_installed
+java.util.concurrent.CompletionException: java.lang.IllegalArgumentException: Whilst parsing command on line 4: Unknown or incomplete command, see below for error at position 0: <--[HERE]
+	at java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:315) ~[?:?]
+	at java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:320) ~[?:?]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1770) ~[?:?]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.exec(CompletableFuture.java:1760) ~[?:?]
+	at java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387) ~[?:?]
+	at java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1312) ~[?:?]
+	at java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1843) ~[?:?]
+	at java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1808) ~[?:?]
+	at java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188) ~[?:?]
+Caused by: java.lang.IllegalArgumentException: Whilst parsing command on line 4: Unknown or incomplete command, see below for error at position 0: <--[HERE]
+	at net.minecraft.commands.CommandFunction.m_77984_(CommandFunction.java:63) ~[server-1.20.1-20230612.114412-srg.jar%23395!/:?]
+	at net.minecraft.server.ServerFunctionLibrary.m_214320_(ServerFunctionLibrary.java:83) ~[server-1.20.1-20230612.114412-srg.jar%23395!/:?]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1768) ~[?:?]
+	... 6 more
+[13Oct2026 10:00:45.721] [main/ERROR] [net.minecraft.server.ServerFunctionLibrary/]: Failed to load function spawnanimations:internal/entity/ehs/pehkui/enderman/hide
+java.util.concurrent.CompletionException: java.lang.IllegalArgumentException: Whilst parsing command on line 4: Unknown or incomplete command, see below for error at position 0: <--[HERE]
+	at java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:315) ~[?:?]
+	at java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:320) ~[?:?]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1770) ~[?:?]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.exec(CompletableFuture.java:1760) ~[?:?]
+	at java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387) ~[?:?]
+	at java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1312) ~[?:?]
+	at java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1843) ~[?:?]
+	at java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1808) ~[?:?]
+	at java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188) ~[?:?]
+Caused by: java.lang.IllegalArgumentException: Whilst parsing command on line 4: Unknown or incomplete command, see below for error at position 0: <--[HERE]
+	at net.minecraft.commands.CommandFunction.m_77984_(CommandFunction.java:63) ~[server-1.20.1-20230612.114412-srg.jar%23395!/:?]
+	at net.minecraft.server.ServerFunctionLibrary.m_214320_(ServerFunctionLibrary.java:83) ~[server-1.20.1-20230612.114412-srg.jar%23395!/:?]
+	at java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1768) ~[?:?]
+	... 6 more
+[13Oct2026 10:00:45.768] [main/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 2673 advancements
+[13Oct2026 10:00:45.769] [main/INFO] [io.github.mortuusars.exposure.Exposure/]: Loading exposure lenses:
+[13Oct2026 10:00:45.770] [main/INFO] [io.github.mortuusars.exposure.Exposure/]: Lens [exposure:spyglass, FocalRange[min=55, max=200]] added.
+[13Oct2026 10:00:45.772] [main/INFO] [top.theillusivec4.curios.Curios/]: Loaded 10 curio slots
+[13Oct2026 10:00:45.774] [main/INFO] [top.theillusivec4.curios.Curios/]: Loaded 1 curio entities
+[13Oct2026 10:00:45.780] [main/INFO] [Supplementaries/]: Loaded 27 flute songs
+[13Oct2026 10:00:45.838] [main/INFO] [Moonlight/]: Applied 18 data villager trades
+[13Oct2026 10:00:45.855] [main/INFO] [Supplementaries/]: Finished additional setup in 0 ms
+[13Oct2026 10:00:45.876] [main/WARN] [ModernFix/]: Initial datapack load took 1.817 s
+[13Oct2026 10:00:46.038] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Starting minecraft server version 1.20.1
+[13Oct2026 10:00:46.038] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Loading properties
+[13Oct2026 10:00:46.038] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Default game type: SURVIVAL
+[13Oct2026 10:00:46.038] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
+[13Oct2026 10:00:46.084] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Starting Minecraft server on 0.0.0.0:27101
+[13Oct2026 10:00:46.096] [Server thread/INFO] [net.minecraft.server.network.ServerConnectionListener/]: Using epoll channel type
+[13Oct2026 10:00:46.144] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[13Oct2026 10:00:46.144] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: The server will make no attempt to authenticate usernames. Beware.
+[13Oct2026 10:00:46.144] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[13Oct2026 10:00:46.144] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: To change this, set "online-mode" to "true" in the server.properties file.
+[13Oct2026 10:00:46.155] [Server thread/INFO] [Puzzles Lib/]: Loading server config for netherchested
+[13Oct2026 10:00:46.156] [Server thread/INFO] [Puzzles Lib/]: Loading server config for puzzlesapi
+[13Oct2026 10:00:46.235] [Server thread/INFO] [spark/]: Starting background profiler...
+[13Oct2026 10:00:46.533] [Server thread/INFO] [citadel/]: vanilla surface rule behavior unchanged
+[13Oct2026 10:00:46.538] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Preparing level "world"
+[13Oct2026 10:00:47.038] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
+[13Oct2026 10:00:47.729] [Server thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[13Oct2026 10:00:47.729] [Server thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[13Oct2026 10:00:48.039] [Server thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 1000 ms
+[13Oct2026 10:00:48.039] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Done (1.887s)! For help, type "help"
+[13Oct2026 10:00:48.039] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Starting remote control listener
+[13Oct2026 10:00:48.041] [Server thread/INFO] [net.minecraft.server.rcon.thread.GenericThread/]: Thread RCON Listener started
+[13Oct2026 10:00:48.041] [Server thread/INFO] [net.minecraft.server.rcon.thread.RconThread/]: RCON running on 0.0.0.0:15017
+[13Oct2026 10:00:48.070] [Server thread/INFO] [net.minecraftforge.server.permission.PermissionAPI/]: Successfully initialized permission handler forge:default_handler
+[13Oct2026 10:00:48.307] [Server thread/INFO] [spawnanimations/]: [Spawn Animations] Sending global config to world ...
+[13Oct2026 10:00:48.310] [Server thread/WARN] [voicechat/]: [voicechat] Running in offline mode - Voice chat encryption is not secure!
+[13Oct2026 10:00:48.313] [VoiceChatServerThread/INFO] [voicechat/]: [voicechat] Using server-ip as bind address: 0.0.0.0
+[13Oct2026 10:00:48.314] [VoiceChatServerThread/INFO] [voicechat/]: [voicechat] Voice chat server started at 0.0.0.0:24454
+[13Oct2026 10:00:48.314] [Server thread/WARN] [ModernFix/]: Dedicated server took 17.876 seconds to load
+[13Oct2026 10:00:48.319] [Server thread/INFO] [mixin/]: Mixing common.MixinServerStatus from mixins/common/nochatreports.mixins.json into net.minecraft.network.protocol.status.ServerStatus
+[13Oct2026 10:00:48.409] [Server thread/INFO] [Enhanced Celestials 2: Core/]: [minecraft:overworld]: Lunar Event probability for "enhancedcelestials2defaultlunarevents:blood_moon" was set by highest priority lunar event probability "enhancedcelestials2defaultlunarevents:blood_moon" with priority 0.
+[13Oct2026 10:00:48.410] [Server thread/INFO] [Enhanced Celestials 2: Core/]: [minecraft:overworld]: Lunar Event probability for "enhancedcelestials2defaultlunarevents:blue_moon" was set by highest priority lunar event probability "enhancedcelestials2defaultlunarevents:blue_moon" with priority 0.
+[13Oct2026 10:00:48.410] [Server thread/INFO] [Enhanced Celestials 2: Core/]: [minecraft:overworld]: Lunar Event probability for "enhancedcelestials2defaultlunarevents:harvest_moon" was set by highest priority lunar event probability "enhancedcelestials2defaultlunarevents:harvest_moon" with priority 0.
+[13Oct2026 10:00:48.410] [Server thread/INFO] [Enhanced Celestials 2: Core/]: [minecraft:overworld]: Lunar Event probability for "enhancedcelestials2defaultlunarevents:super_blood_moon" was set by highest priority lunar event probability "enhancedcelestials2defaultlunarevents:super_blood_moon" with priority 0.
+[13Oct2026 10:00:48.410] [Server thread/INFO] [Enhanced Celestials 2: Core/]: [minecraft:overworld]: Lunar Event probability for "enhancedcelestials2defaultlunarevents:super_blue_moon" was set by highest priority lunar event probability "enhancedcelestials2defaultlunarevents:super_blue_moon" with priority 0.
+[13Oct2026 10:00:48.410] [Server thread/INFO] [Enhanced Celestials 2: Core/]: [minecraft:overworld]: Lunar Event probability for "enhancedcelestials2defaultlunarevents:super_harvest_moon" was set by highest priority lunar event probability "enhancedcelestials2defaultlunarevents:super_harvest_moon" with priority 0.
+[13Oct2026 10:00:48.410] [Server thread/INFO] [Enhanced Celestials 2: Core/]: [minecraft:overworld]: Lunar Event probability for "enhancedcelestials2defaultlunarevents:super_moon" was set by highest priority lunar event probability "enhancedcelestials2defaultlunarevents:super_moon" with priority 0.
+[13Oct2026 10:00:51.953] [Netty Epoll Server IO #1/INFO] [mixin/]: Mixing server.MixinServerboundChatCommandPacket from mixins/common/nochatreports.mixins.json into net.minecraft.network.protocol.game.ServerboundChatCommandPacket
+[13Oct2026 10:00:51.954] [Netty Epoll Server IO #1/INFO] [mixin/]: Mixing server.MixinServerboundChatPacket from mixins/common/nochatreports.mixins.json into net.minecraft.network.protocol.game.ServerboundChatPacket
+[13Oct2026 10:00:51.955] [Netty Epoll Server IO #1/INFO] [mixin/]: Mixing server.MixinServerboundChatSessionUpdatePacket from mixins/common/nochatreports.mixins.json into net.minecraft.network.protocol.game.ServerboundChatSessionUpdatePacket
+[13Oct2026 10:00:58.976] [Forge Version Check/WARN] [net.minecraftforge.fml.VersionChecker/]: Failed to process update information
+java.net.http.HttpConnectTimeoutException: HTTP connect timed out
+	at jdk.internal.net.http.HttpClientImpl.send(HttpClientImpl.java:949) ~[java.net.http:?]
+	at jdk.internal.net.http.HttpClientFacade.send(HttpClientFacade.java:133) ~[java.net.http:?]
+	at net.minecraftforge.fml.VersionChecker$1.openUrlString(VersionChecker.java:142) ~[fmlcore-1.20.1-47.4.26.jar%23396!/:?]
+	at net.minecraftforge.fml.VersionChecker$1.process(VersionChecker.java:180) ~[fmlcore-1.20.1-47.4.26.jar%23396!/:?]
+	at java.lang.Iterable.forEach(Iterable.java:75) ~[?:?]
+	at net.minecraftforge.fml.VersionChecker$1.run(VersionChecker.java:117) ~[fmlcore-1.20.1-47.4.26.jar%23396!/:?]
+Caused by: java.net.http.HttpConnectTimeoutException: HTTP connect timed out
+	at jdk.internal.net.http.ResponseTimerEvent.handle(ResponseTimerEvent.java:68) ~[java.net.http:?]
+	at jdk.internal.net.http.HttpClientImpl.purgeTimeoutsAndReturnNextDeadline(HttpClientImpl.java:1788) ~[java.net.http:?]
+	at jdk.internal.net.http.HttpClientImpl$SelectorManager.run(HttpClientImpl.java:1386) ~[java.net.http:?]
+Caused by: java.net.ConnectException: HTTP connect timed out
+	at jdk.internal.net.http.ResponseTimerEvent.handle(ResponseTimerEvent.java:69) ~[java.net.http:?]
+	at jdk.internal.net.http.HttpClientImpl.purgeTimeoutsAndReturnNextDeadline(HttpClientImpl.java:1788) ~[java.net.http:?]
+	at jdk.internal.net.http.HttpClientImpl$SelectorManager.run(HttpClientImpl.java:1386) ~[java.net.http:?]
+[13Oct2026 10:00:58.977] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [mr_limesplatus_ending] Starting version check at https://api.modrinth.com/updates/MCnBYP0b/forge_updates.json
+[13Oct2026 10:00:59.139] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [mr_limesplatus_ending] Found status: OUTDATED Current: 1-v1.1.0c Target: 1.1.0c+mod
+[13Oct2026 10:00:59.139] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [netherchested] Starting version check at https://raw.githubusercontent.com/Fuzss/modresources/main/update/netherchested.json
+[13Oct2026 10:00:59.158] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [netherchested] Found status: UP_TO_DATE Current: 8.0.4 Target: null
+[13Oct2026 10:00:59.158] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [dynamic_fps] Starting version check at https://api.lostluma.net/updates/dynamic-fps?platform=forge
+[13Oct2026 10:00:59.202] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [dynamic_fps] Found status: UP_TO_DATE Current: 3.11.4 Target: null
+[13Oct2026 10:00:59.202] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [unilib] Starting version check at https://raw.githubusercontent.com/CDAGaming/VersionLibrary/master/UniLib/update.json
+[13Oct2026 10:00:59.222] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [unilib] Found status: AHEAD Current: 1.2.1 Target: null
+[13Oct2026 10:00:59.226] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [mr_animated_doors] Starting version check at https://api.modrinth.com/updates/EuloLapn/forge_updates.json
+[13Oct2026 10:00:59.354] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [mr_animated_doors] Found status: OUTDATED Current: 1.0 Target: 1.20+mod
+[13Oct2026 10:00:59.354] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [betteranimationscollection] Starting version check at https://raw.githubusercontent.com/Fuzss/modresources/main/update/betteranimationscollection.json
+[13Oct2026 10:00:59.372] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [betteranimationscollection] Found status: UP_TO_DATE Current: 8.0.1 Target: null
+[13Oct2026 10:00:59.373] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [puzzlesapi] Starting version check at https://raw.githubusercontent.com/Fuzss/modresources/main/update/puzzlesapi.json
+[13Oct2026 10:00:59.390] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [puzzlesapi] Found status: BETA Current: 8.1.7 Target: null
+[13Oct2026 10:00:59.390] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [attributefix] Starting version check at https://updates.blamejared.com/get?n=attributefix&gv=1.20.1
+[13Oct2026 10:00:59.395] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [attributefix] Found status: BETA Current: 21.0.5 Target: 21.0.5
+[13Oct2026 10:00:59.395] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [catalogue] Starting version check at https://mrcrayfish.com/modupdatejson?id=catalogue
+[13Oct2026 10:00:59.516] [Forge Version Check/WARN] [net.minecraftforge.fml.VersionChecker/]: Failed to process update information
+com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 1 path $
+	at com.google.gson.Gson.fromJson(Gson.java:1226) ~[gson-2.10.jar%2372!/:?]
+	at com.google.gson.Gson.fromJson(Gson.java:1124) ~[gson-2.10.jar%2372!/:?]
+	at com.google.gson.Gson.fromJson(Gson.java:1034) ~[gson-2.10.jar%2372!/:?]
+	at com.google.gson.Gson.fromJson(Gson.java:969) ~[gson-2.10.jar%2372!/:?]
+	at net.minecraftforge.fml.VersionChecker$1.process(VersionChecker.java:186) ~[fmlcore-1.20.1-47.4.26.jar%23396!/:?]
+	at java.lang.Iterable.forEach(Iterable.java:75) ~[?:?]
+	at net.minecraftforge.fml.VersionChecker$1.run(VersionChecker.java:117) ~[fmlcore-1.20.1-47.4.26.jar%23396!/:?]
+Caused by: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 1 path $
+	at com.google.gson.stream.JsonReader.beginObject(JsonReader.java:393) ~[gson-2.10.jar%2372!/:?]
+	at com.google.gson.internal.bind.MapTypeAdapterFactory$Adapter.read(MapTypeAdapterFactory.java:182) ~[gson-2.10.jar%2372!/:?]
+	at com.google.gson.internal.bind.MapTypeAdapterFactory$Adapter.read(MapTypeAdapterFactory.java:144) ~[gson-2.10.jar%2372!/:?]
+	at com.google.gson.Gson.fromJson(Gson.java:1214) ~[gson-2.10.jar%2372!/:?]
+	... 6 more
+[13Oct2026 10:00:59.516] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [puzzlesaccessapi] Starting version check at https://raw.githubusercontent.com/Fuzss/modresources/main/update/puzzlesaccessapi.json
+[13Oct2026 10:00:59.534] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [puzzlesaccessapi] Found status: BETA Current: 20.1.1 Target: null
+[13Oct2026 10:00:59.534] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Starting version check at https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json
+[13Oct2026 10:00:59.671] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Found status: OUTDATED Current: 47.4.26 Target: 47.4.27
+[13Oct2026 10:00:59.671] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [voicechat] Starting version check at https://update.maxhenkel.de/forge/voicechat
+[13Oct2026 10:00:59.742] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [voicechat] Found status: UP_TO_DATE Current: 1.20.1-2.6.24 Target: null
+[13Oct2026 10:00:59.742] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [sound_physics_remastered] Starting version check at https://update.maxhenkel.de/forge/sound_physics_remastered
+[13Oct2026 10:00:59.748] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [sound_physics_remastered] Found status: OUTDATED Current: 1.20.1-1.4.10 Target: 1.20.1-1.5.1
+[13Oct2026 10:00:59.748] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [gravestone] Starting version check at https://update.maxhenkel.de/forge/gravestone
+[13Oct2026 10:00:59.754] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [gravestone] Found status: AHEAD Current: 1.20.1-1.0.35 Target: null
+[13Oct2026 10:00:59.754] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [puzzleslib] Starting version check at https://raw.githubusercontent.com/Fuzss/modresources/main/update/puzzleslib.json
+[13Oct2026 10:00:59.771] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [puzzleslib] Found status: UP_TO_DATE Current: 8.1.36 Target: null
+[13Oct2026 10:00:59.771] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [prism] Starting version check at https://mc-update-check.anthonyhilyard.com/638111
+[13Oct2026 10:01:03.793] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: Trunin[/84.121.156.109:63253] logged in with entity id 110 at (-2818.1203152872667, 62.07326432466506, 1160.959891157259)
+[13Oct2026 10:01:03.813] [Server thread/INFO] [ModernFix/]: Using enhanced recipe sync for player Trunin
+[13Oct2026 10:01:03.821] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Trunin joined the game
+[13Oct2026 10:01:03.828] [Server thread/WARN] [ModernFix/]: Skipped emitting ENTITY_MOUNT game event for entity Boat['Boat'/111, l='ServerLevel[world]', x=-2818.12, y=62.52, z=1160.96] as it would cause deadlock
+[13Oct2026 10:01:03.939] [Server thread/INFO] [fallingtrees | Config/]: Sending common config 'fallingtrees:fallingtrees_common' to Trunin
+[13Oct2026 10:01:03.946] [Server thread/INFO] [Jade/]: Syncing config to Trunin (19db1dc3-df05-39b4-944f-bb03b557d058)
+[13Oct2026 10:01:04.015] [Netty Epoll Server IO #2/INFO] [fallingtrees | Config/]: Received client config 'fallingtrees:fallingtrees_client' from Trunin
+[13Oct2026 10:01:04.029] [Server thread/INFO] [voicechat/]: [voicechat] Received secret request of Trunin (20)
+[13Oct2026 10:01:04.031] [Server thread/INFO] [voicechat/]: [voicechat] Sent secret to Trunin
+[13Oct2026 10:01:04.033] [Server thread/INFO] [de.keksuccino.fancymenu.networking.packets.handshake.ServerSideHandshakePacketLogic/]: [FANCYMENU] A client with FancyMenu installed joined the server: Trunin
+[13Oct2026 10:01:10.028] [Worker-Main-2/INFO] [citadel/]: vanilla surface rule behavior unchanged
+[13Oct2026 10:01:10.085] [Worker-Main-2/INFO] [bettercaves/]: CREATING AND INIT'ING MASTER CONTROLLER...
+[13Oct2026 10:01:14.772] [Forge Version Check/WARN] [net.minecraftforge.fml.VersionChecker/]: Failed to process update information
+java.net.http.HttpConnectTimeoutException: HTTP connect timed out
+	at jdk.internal.net.http.HttpClientImpl.send(HttpClientImpl.java:949) ~[java.net.http:?]
+	at jdk.internal.net.http.HttpClientFacade.send(HttpClientFacade.java:133) ~[java.net.http:?]
+	at net.minecraftforge.fml.VersionChecker$1.openUrlString(VersionChecker.java:142) ~[fmlcore-1.20.1-47.4.26.jar%23396!/:?]
+	at net.minecraftforge.fml.VersionChecker$1.process(VersionChecker.java:180) ~[fmlcore-1.20.1-47.4.26.jar%23396!/:?]
+	at java.lang.Iterable.forEach(Iterable.java:75) ~[?:?]
+	at net.minecraftforge.fml.VersionChecker$1.run(VersionChecker.java:117) ~[fmlcore-1.20.1-47.4.26.jar%23396!/:?]
+Caused by: java.net.http.HttpConnectTimeoutException: HTTP connect timed out
+	at jdk.internal.net.http.ResponseTimerEvent.handle(ResponseTimerEvent.java:68) ~[java.net.http:?]
+	at jdk.internal.net.http.HttpClientImpl.purgeTimeoutsAndReturnNextDeadline(HttpClientImpl.java:1788) ~[java.net.http:?]
+	at jdk.internal.net.http.HttpClientImpl$SelectorManager.run(HttpClientImpl.java:1386) ~[java.net.http:?]
+Caused by: java.net.ConnectException: HTTP connect timed out
+	at jdk.internal.net.http.ResponseTimerEvent.handle(ResponseTimerEvent.java:69) ~[java.net.http:?]
+	at jdk.internal.net.http.HttpClientImpl.purgeTimeoutsAndReturnNextDeadline(HttpClientImpl.java:1788) ~[java.net.http:?]
+	at jdk.internal.net.http.HttpClientImpl$SelectorManager.run(HttpClientImpl.java:1386) ~[java.net.http:?]
+[13Oct2026 10:01:14.772] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [bookshelf] Starting version check at https://updates.blamejared.com/get?n=bookshelf&gv=1.20.1
+[13Oct2026 10:01:14.784] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [bookshelf] Found status: BETA Current: 20.2.15 Target: 20.2.15
+[13Oct2026 10:01:14.784] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [cameraoverhaul] Starting version check at https://github.com/Mirsario/Minecraft-CameraOverhaul/blob/dev/meta/ForgeUpdateCheck.json?raw=true
+[13Oct2026 10:01:14.865] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [cameraoverhaul] Found status: AHEAD Current: 2.1.2-forge+mc.1.20-1.20.5 Target: null
+[13Oct2026 10:01:14.866] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [anvilrepairing] Starting version check at https://updates.blamejared.com/get?n=anvilrepairing&gv=1.20.1
+[13Oct2026 10:01:14.869] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [anvilrepairing] Found status: BETA Current: 4.0.10 Target: 4.0.10
+[13Oct2026 10:01:14.869] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [craftpresence] Starting version check at https://raw.githubusercontent.com/CDAGaming/VersionLibrary/master/CraftPresence/update.json
+[13Oct2026 10:01:14.891] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [craftpresence] Found status: AHEAD Current: 2.7.1 Target: null
+[13Oct2026 10:01:14.891] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [clumps] Starting version check at https://updates.blamejared.com/get?n=clumps&gv=1.20.1
+[13Oct2026 10:01:14.895] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [clumps] Found status: BETA Current: 12.0.0.4 Target: 12.0.0.4
+[13Oct2026 10:01:14.895] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [itemborders] Starting version check at https://mc-update-check.anthonyhilyard.com/513769
+[13Oct2026 10:01:29.895] [Forge Version Check/WARN] [net.minecraftforge.fml.VersionChecker/]: Failed to process update information
+java.net.http.HttpConnectTimeoutException: HTTP connect timed out
+	at jdk.internal.net.http.HttpClientImpl.send(HttpClientImpl.java:949) ~[java.net.http:?]
+	at jdk.internal.net.http.HttpClientFacade.send(HttpClientFacade.java:133) ~[java.net.http:?]
+	at net.minecraftforge.fml.VersionChecker$1.openUrlString(VersionChecker.java:142) ~[fmlcore-1.20.1-47.4.26.jar%23396!/:?]
+	at net.minecraftforge.fml.VersionChecker$1.process(VersionChecker.java:180) ~[fmlcore-1.20.1-47.4.26.jar%23396!/:?]
+	at java.lang.Iterable.forEach(Iterable.java:75) ~[?:?]
+	at net.minecraftforge.fml.VersionChecker$1.run(VersionChecker.java:117) ~[fmlcore-1.20.1-47.4.26.jar%23396!/:?]
+Caused by: java.net.http.HttpConnectTimeoutException: HTTP connect timed out
+	at jdk.internal.net.http.ResponseTimerEvent.handle(ResponseTimerEvent.java:68) ~[java.net.http:?]
+	at jdk.internal.net.http.HttpClientImpl.purgeTimeoutsAndReturnNextDeadline(HttpClientImpl.java:1788) ~[java.net.http:?]
+	at jdk.internal.net.http.HttpClientImpl$SelectorManager.run(HttpClientImpl.java:1386) ~[java.net.http:?]
+Caused by: java.net.ConnectException: HTTP connect timed out
+	at jdk.internal.net.http.ResponseTimerEvent.handle(ResponseTimerEvent.java:69) ~[java.net.http:?]
+	at jdk.internal.net.http.HttpClientImpl.purgeTimeoutsAndReturnNextDeadline(HttpClientImpl.java:1788) ~[java.net.http:?]
+	at jdk.internal.net.http.HttpClientImpl$SelectorManager.run(HttpClientImpl.java:1386) ~[java.net.http:?]
+[13Oct2026 10:01:29.895] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [make_bubbles_pop] Starting version check at https://api.modrinth.com/updates/gPCdW0Wr/forge_updates.json
+[13Oct2026 10:01:30.111] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [make_bubbles_pop] Found status: UP_TO_DATE Current: 0.3.0-forge Target: null
+[13Oct2026 10:01:30.111] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [enchdesc] Starting version check at https://updates.blamejared.com/get?n=enchdesc&gv=1.20.1
+[13Oct2026 10:01:30.114] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [enchdesc] Found status: BETA Current: 17.1.21 Target: 17.1.21
+[13Oct2026 10:01:30.114] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [smoothboot] Starting version check at https://github.com/AbdElAziz333/SmoothBoot-Reloaded/raw/mc1.20.1/dev/updates.json
+[13Oct2026 10:01:30.129] [Forge Version Check/WARN] [net.minecraftforge.fml.VersionChecker/]: Failed to process update information
+com.google.gson.JsonSyntaxException: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 9 column 1 path $
+	at com.google.gson.Gson.fromJson(Gson.java:1226) ~[gson-2.10.jar%2372!/:?]
+	at com.google.gson.Gson.fromJson(Gson.java:1124) ~[gson-2.10.jar%2372!/:?]
+	at com.google.gson.Gson.fromJson(Gson.java:1034) ~[gson-2.10.jar%2372!/:?]
+	at com.google.gson.Gson.fromJson(Gson.java:969) ~[gson-2.10.jar%2372!/:?]
+	at net.minecraftforge.fml.VersionChecker$1.process(VersionChecker.java:186) ~[fmlcore-1.20.1-47.4.26.jar%23396!/:?]
+	at java.lang.Iterable.forEach(Iterable.java:75) ~[?:?]
+	at net.minecraftforge.fml.VersionChecker$1.run(VersionChecker.java:117) ~[fmlcore-1.20.1-47.4.26.jar%23396!/:?]
+Caused by: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 9 column 1 path $
+	at com.google.gson.stream.JsonReader.beginObject(JsonReader.java:393) ~[gson-2.10.jar%2372!/:?]
+	at com.google.gson.internal.bind.MapTypeAdapterFactory$Adapter.read(MapTypeAdapterFactory.java:182) ~[gson-2.10.jar%2372!/:?]
+	at com.google.gson.internal.bind.MapTypeAdapterFactory$Adapter.read(MapTypeAdapterFactory.java:144) ~[gson-2.10.jar%2372!/:?]
+	at com.google.gson.Gson.fromJson(Gson.java:1214) ~[gson-2.10.jar%2372!/:?]
+	... 6 more
+[13Oct2026 10:01:30.129] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [iceberg] Starting version check at https://mc-update-check.anthonyhilyard.com/520110
+[13Oct2026 10:01:45.130] [Forge Version Check/WARN] [net.minecraftforge.fml.VersionChecker/]: Failed to process update information
+java.net.http.HttpConnectTimeoutException: HTTP connect timed out
+	at jdk.internal.net.http.HttpClientImpl.send(HttpClientImpl.java:949) ~[java.net.http:?]
+	at jdk.internal.net.http.HttpClientFacade.send(HttpClientFacade.java:133) ~[java.net.http:?]
+	at net.minecraftforge.fml.VersionChecker$1.openUrlString(VersionChecker.java:142) ~[fmlcore-1.20.1-47.4.26.jar%23396!/:?]
+	at net.minecraftforge.fml.VersionChecker$1.process(VersionChecker.java:180) ~[fmlcore-1.20.1-47.4.26.jar%23396!/:?]
+	at java.lang.Iterable.forEach(Iterable.java:75) ~[?:?]
+	at net.minecraftforge.fml.VersionChecker$1.run(VersionChecker.java:117) ~[fmlcore-1.20.1-47.4.26.jar%23396!/:?]
+Caused by: java.net.http.HttpConnectTimeoutException: HTTP connect timed out
+	at jdk.internal.net.http.ResponseTimerEvent.handle(ResponseTimerEvent.java:68) ~[java.net.http:?]
+	at jdk.internal.net.http.HttpClientImpl.purgeTimeoutsAndReturnNextDeadline(HttpClientImpl.java:1788) ~[java.net.http:?]
+	at jdk.internal.net.http.HttpClientImpl$SelectorManager.run(HttpClientImpl.java:1386) ~[java.net.http:?]
+Caused by: java.net.ConnectException: HTTP connect timed out
+	at jdk.internal.net.http.ResponseTimerEvent.handle(ResponseTimerEvent.java:69) ~[java.net.http:?]
+	at jdk.internal.net.http.HttpClientImpl.purgeTimeoutsAndReturnNextDeadline(HttpClientImpl.java:1788) ~[java.net.http:?]
+	at jdk.internal.net.http.HttpClientImpl$SelectorManager.run(HttpClientImpl.java:1386) ~[java.net.http:?]
+[13Oct2026 10:01:45.130] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [spawnanimations] Starting version check at https://api.modrinth.com/updates/zrzYrlm0/forge_updates.json?forge=only
+[13Oct2026 10:01:45.288] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [spawnanimations] Found status: UP_TO_DATE Current: 1.11.6+mod Target: null
+[13Oct2026 10:01:45.289] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [betterf3] Starting version check at https://api.modrinth.com/updates/betterf3/forge_updates.json
+[13Oct2026 10:01:45.417] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [betterf3] Found status: UP_TO_DATE Current: 7.0.2 Target: null
+[13Oct2026 10:01:45.417] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [presencefootsteps] Starting version check at https://forge.curseupdate.com/433068/presencefootsteps
+[13Oct2026 10:01:45.490] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [presencefootsteps] Found status: BETA Current: 1.20.1-1.9.1-beta.1 Target: 1.20.1-1.9.1-beta.1
+[13Oct2026 10:05:56.286] [Worker-Main-1/ERROR] [net.minecraft.world.entity.decoration.HangingEntity/]: Hanging entity at invalid position: BlockPos{x=-32, y=-60, z=16}
+[13Oct2026 10:05:56.922] [Worker-Main-7/ERROR] [net.minecraft.world.entity.decoration.HangingEntity/]: Hanging entity at invalid position: BlockPos{x=-32, y=-60, z=16}
+[13Oct2026 10:17:54.120] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Trunin lost connection: Disconnected
+[13Oct2026 10:17:54.120] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Trunin left the game
+[13Oct2026 10:17:54.122] [Server thread/INFO] [voicechat/]: [voicechat] Disconnecting client Trunin
+[13Oct2026 10:17:56.637] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: Trunin[/84.121.156.109:63418] logged in with entity id 3264 at (-3185.8921782574616, 113.0, 834.3000000119209)
+[13Oct2026 10:17:56.643] [Server thread/INFO] [ModernFix/]: Using enhanced recipe sync for player Trunin
+[13Oct2026 10:17:56.645] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Trunin joined the game
+[13Oct2026 10:17:56.650] [Server thread/INFO] [fallingtrees | Config/]: Sending common config 'fallingtrees:fallingtrees_common' to Trunin
+[13Oct2026 10:17:56.652] [Server thread/INFO] [Jade/]: Syncing config to Trunin (19db1dc3-df05-39b4-944f-bb03b557d058)
+[13Oct2026 10:17:56.802] [Netty Epoll Server IO #3/INFO] [fallingtrees | Config/]: Received client config 'fallingtrees:fallingtrees_client' from Trunin
+[13Oct2026 10:17:56.803] [Server thread/INFO] [voicechat/]: [voicechat] Received secret request of Trunin (20)
+[13Oct2026 10:17:56.803] [Server thread/INFO] [voicechat/]: [voicechat] Sent secret to Trunin
+[13Oct2026 10:17:56.804] [Server thread/INFO] [de.keksuccino.fancymenu.networking.packets.handshake.ServerSideHandshakePacketLogic/]: [FANCYMENU] A client with FancyMenu installed joined the server: Trunin
+[13Oct2026 10:23:15.983] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Trunin has made the advancement [Crops of the Wild]
+[13Oct2026 10:25:41.317] [RCON Listener #1/INFO] [net.minecraft.server.rcon.thread.GenericThread/]: Thread RCON Client /80.28.211.131 started
+[13Oct2026 10:25:41.431] [RCON Client /80.28.211.131 #2/INFO] [net.minecraft.server.rcon.thread.RconClient/]: Thread RCON Client /80.28.211.131 shutting down
+[13Oct2026 10:26:00.189] [RCON Listener #1/INFO] [net.minecraft.server.rcon.thread.GenericThread/]: Thread RCON Client /80.28.211.131 started
+[13Oct2026 10:26:00.301] [RCON Client /80.28.211.131 #3/INFO] [net.minecraft.server.rcon.thread.RconClient/]: Thread RCON Client /80.28.211.131 shutting down
+[13Oct2026 10:38:07.566] [Server thread/WARN] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Boat (vehicle of Trunin) moved too quickly! -4.098353115954751,0.0,9.321373922772864
+[13Oct2026 10:38:07.567] [Server thread/WARN] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Boat (vehicle of Trunin) moved too quickly! -4.183801639024978,0.0,9.70641847214847
+[13Oct2026 10:38:07.567] [Server thread/WARN] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Boat (vehicle of Trunin) moved too quickly! -4.266559352326112,0.0,10.092527864524982
+[13Oct2026 10:38:07.567] [Server thread/WARN] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Boat (vehicle of Trunin) moved too quickly! -4.34680806824872,0.0,10.479608430575581
+[13Oct2026 10:38:07.567] [Server thread/WARN] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Boat (vehicle of Trunin) moved too quickly! -4.424722778212754,0.0,10.867574035065445
+[13Oct2026 10:38:07.567] [Server thread/WARN] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: Boat (vehicle of Trunin) moved too quickly! -4.50046854800712,0.0,11.2563459381156
