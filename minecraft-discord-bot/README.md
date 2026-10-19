@@ -45,7 +45,7 @@ This project is part of my journey as an ASIR student, exploring Python automati
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/Msanfer1403/minecraft-discord-bot.git
+git clone https://github.com/maximo-sf/minecraft-discord-bot.git
 cd minecraft-discord-bot
 ```
 
@@ -102,9 +102,9 @@ python3 bot.py
 
 ## 👨‍💻 Author
 
-**Msanfer1403** — ASIR student interested in Linux, networking, automation and cybersecurity.
+**maximo-sf** — ASIR student interested in Linux, networking, automation and cybersecurity.
 
-[GitHub Profile](https://github.com/Msanfer1403)
+[GitHub Profile](https://github.com/maximo-sf)
 
 ---
 
