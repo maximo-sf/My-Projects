@@ -4,109 +4,378 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Classroom LAN Chat</title>
-    <link rel="stylesheet" href="style.css">
     <style>
-        /* Rich Media Picker Styles */
+        :root {
+            --bg-dark: #0f172a;
+            --bg-panel: #1e293b;
+            --bg-sidebar: #0b1120;
+            --bg-element: #334155;
+            --accent-blue: #38bdf8;
+            --accent-green: #22c55e;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        #app-layout {
+            display: flex;
+            width: 100%;
+            max-width: 1100px;
+            height: 85vh;
+            background: var(--bg-panel);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Lateral Sidebar */
+        #sidebar {
+            width: 260px;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .brand h2 {
+            font-size: 1.1rem;
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--accent-green);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-green);
+        }
+
+        .section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        #user-list {
+            list-style: none;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        #user-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            background: rgba(255, 255, 255, 0.02);
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        #user-list li:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        /* Main Chat Area */
+        #chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        #chat-header {
+            padding: 20px 24px;
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #chat-messages {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--bg-element); border-radius: 4px; }
+
+        /* Message Bubbles */
+        .message-card {
+            background: var(--bg-element);
+            padding: 12px 16px;
+            border-radius: 12px;
+            max-width: 70%;
+            word-wrap: break-word;
+            align-self: flex-start;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-card.mine {
+            align-self: flex-end;
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        .msg-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 0.75rem;
+            opacity: 0.8;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .msg-body {
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .msg-body img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+
+        /* Footer & Form */
+        #chat-footer {
+            padding: 16px 24px;
+            background: var(--bg-sidebar);
+            border-top: 1px solid var(--border-color);
+        }
+
+        #message-form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        #message-input {
+            flex: 1;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: var(--text-main);
+            outline: none;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+
+        #message-input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .btn-action {
+            background: var(--bg-element);
+            border: none;
+            color: var(--text-main);
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .btn-action:hover {
+            background: var(--accent-blue);
+            color: #0f172a;
+        }
+
+        #send-btn {
+            background: var(--accent-blue);
+            color: #0f172a;
+            font-weight: 700;
+            padding: 12px 20px;
+            font-size: 0.95rem;
+        }
+
+        /* Media Picker Window */
         .picker-container {
             position: absolute;
-            bottom: 70px;
-            right: 20px;
+            bottom: 80px;
+            right: 24px;
             width: 320px;
-            height: 350px;
-            background: #1e293b;
-            border: 1px solid #475569;
+            height: 340px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
             border-radius: 12px;
             display: none;
             flex-direction: column;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            z-index: 1000;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            overflow: hidden;
         }
+
         .picker-tabs {
             display: flex;
-            background: #0f172a;
-            border-bottom: 1px solid #334155;
+            background: var(--bg-sidebar);
+            border-bottom: 1px solid var(--border-color);
         }
+
         .picker-tab {
             flex: 1;
-            padding: 8px;
+            padding: 10px;
             background: none;
             border: none;
-            color: #94a3b8;
+            color: var(--text-muted);
             cursor: pointer;
+            font-weight: 600;
             font-size: 0.85rem;
+            transition: color 0.2s;
         }
+
         .picker-tab.active {
-            color: #38bdf8;
-            border-bottom: 2px solid #38bdf8;
+            color: var(--accent-blue);
+            border-bottom: 2px solid var(--accent-blue);
         }
+
         .picker-content {
             flex: 1;
-            padding: 10px;
+            padding: 12px;
             overflow-y: auto;
             display: grid;
             gap: 8px;
         }
+
         .emoji-grid {
-            grid-template-columns: repeat(6, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             font-size: 1.5rem;
-            cursor: pointer;
             text-align: center;
+            cursor: pointer;
         }
+
         .gif-grid {
             grid-template-columns: repeat(2, 1fr);
         }
-        .gif-grid img, .sticker-grid img {
+
+        .gif-grid img {
             width: 100%;
             height: 80px;
             object-fit: cover;
             border-radius: 6px;
             cursor: pointer;
+            transition: transform 0.2s;
         }
-        .media-msg img {
-            max-width: 200px;
-            border-radius: 8px;
-            margin-top: 5px;
+
+        .gif-grid img:hover {
+            transform: scale(1.05);
         }
     </style>
 </head>
 <body>
-    <div id="app-container">
-        <header id="chat-header">
-            <h2>Classroom LAN Chat</h2>
-            <span id="network-badge">Local Network</span>
-        </header>
-
-        <main id="chat-messages"></main>
-
-        <!-- Media Picker Box -->
-        <div id="media-picker" class="picker-container">
-            <div class="picker-tabs">
-                <button class="picker-tab active" onclick="switchTab('emojis')">Emojis</button>
-                <button class="picker-tab" onclick="switchTab('gifs')">GIFs</button>
-                <button class="picker-tab" onclick="switchTab('stickers')">Stickers</button>
+    <div id="app-layout">
+        <!-- Sidebar -->
+        <aside id="sidebar">
+            <div class="brand">
+                <h2>Classroom LAN</h2>
             </div>
-            <div id="picker-body" class="picker-content emoji-grid"></div>
-        </div>
+            
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                <span>LAN Active</span>
+            </div>
 
-        <footer id="chat-footer">
-            <form id="message-form">
-                <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off" required>
-                <input type="file" id="file-input" style="display: none;">
-                <button type="button" id="picker-btn" title="Emojis, GIFs & Stickers">😀</button>
-                <button type="button" id="attach-btn" title="Attach file">📎</button>
-                <button type="submit" id="send-btn">Send</button>
-            </form>
-        </footer>
+            <div class="section-title">Connected Peers</div>
+            <ul id="user-list">
+                <li><span class="status-dot"></span> You</li>
+            </ul>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main id="chat-main">
+            <header id="chat-header">
+                <h3>General Room</h3>
+            </header>
+
+            <section id="chat-messages"></section>
+
+            <!-- Media Picker -->
+            <div id="media-picker" class="picker-container">
+                <div class="picker-tabs">
+                    <button class="picker-tab active" onclick="switchTab('emojis')">Emojis</button>
+                    <button class="picker-tab" onclick="switchTab('gifs')">GIFs</button>
+                    <button class="picker-tab" onclick="switchTab('stickers')">Stickers</button>
+                </div>
+                <div id="picker-body" class="picker-content emoji-grid"></div>
+            </div>
+
+            <footer id="chat-footer">
+                <form id="message-form">
+                    <input type="text" id="message-input" placeholder="Write a message..." autocomplete="off" required>
+                    <input type="file" id="file-input" style="display: none;">
+                    <button type="button" class="btn-action" id="picker-btn" title="Emojis/GIFs">😀</button>
+                    <button type="button" class="btn-action" id="attach-btn" title="Attach file">📎</button>
+                    <button type="submit" class="btn-action" id="send-btn">Send</button>
+                </form>
+            </footer>
+        </main>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
-        
-        // Fix for popup reappearing: Save username in sessionStorage
+
+        // Persistent Username
         let username = sessionStorage.getItem('chat_username');
         if (!username) {
-            username = prompt('Enter your username:') || 'Student';
+            username = prompt('Enter your name:') || 'Student';
             sessionStorage.setItem('chat_username', username);
         }
 
@@ -121,28 +390,32 @@
         const mediaPicker = document.getElementById('media-picker');
         const pickerBody = document.getElementById('picker-body');
 
-        // Sample Media Data
-        const emojis = ['😀', '😂', '😍', '😎', '👍', '🔥', '🎉', '🚀', '💯', '❤️', '🙌', '💩'];
+        // Sample Collection
+        const emojis = ['😀', '😂', '😍', '😎', '👍', '🔥', '🎉', '🚀', '💯', '❤️', '🙌', '💩', '🤝', '⚡'];
+
         const gifs = [
             'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHIxZ2s5ZzN0czJ3aWZocmdyZ3V4Nm9icXpzaTRscW16eWtlcnd4dyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/lhLIQcznZP77ZTLJnP/giphy.gif',
             'https://media.giphy.com/media/3o7TKSjRrfIPjeiVyM/giphy.gif',
             'https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif'
         ];
+
         const stickers = [
             'https://cdn-icons-png.flaticon.com/512/4712/4712109.png',
             'https://cdn-icons-png.flaticon.com/512/4712/4712035.png',
             'https://cdn-icons-png.flaticon.com/512/4712/4712038.png'
         ];
 
-        // Toggle Picker
+        // Toggle Media Picker
         pickerBtn.addEventListener('click', () => {
             mediaPicker.style.display = mediaPicker.style.display === 'flex' ? 'none' : 'flex';
             switchTab('emojis');
         });
 
+        // Switch Tabs (Emojis, GIFs, Stickers)
         function switchTab(tab) {
             document.querySelectorAll('.picker-tab').forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
+            if (event) event.target.classList.add('active');
+            
             pickerBody.className = 'picker-content ' + (tab === 'emojis' ? 'emoji-grid' : 'gif-grid');
             pickerBody.innerHTML = '';
 
@@ -150,10 +423,13 @@
                 emojis.forEach(e => {
                     const span = document.createElement('span');
                     span.innerText = e;
-                    span.onclick = () => { messageInput.value += e; mediaPicker.style.display = 'none'; };
+                    span.onclick = () => {
+                        messageInput.value += e;
+                        mediaPicker.style.display = 'none';
+                    };
                     pickerBody.appendChild(span);
                 });
-            } else if (tab === 'gifs' || tab === 'stickers') {
+            } else {
                 const list = tab === 'gifs' ? gifs : stickers;
                 list.forEach(url => {
                     const img = document.createElement('img');
@@ -200,41 +476,38 @@
 
         // Socket Events
         socket.on('receive-message', (data) => {
+            const isMine = data.user === username;
             appendMessage(`
                 <div class="msg-header">
-                    <span class="user">${escapeHtml(data.user)}</span>
-                    <span class="time">${data.timestamp}</span>
+                    <span>${escapeHtml(data.user)}</span>
+                    <span>${data.timestamp}</span>
                 </div>
                 <div class="msg-body">${escapeHtml(data.text)}</div>
-            `);
+            `, isMine ? 'mine' : '');
         });
 
         socket.on('receive-media', (data) => {
+            const isMine = data.user === username;
             appendMessage(`
                 <div class="msg-header">
-                    <span class="user">${escapeHtml(data.user)}</span>
-                    <span class="time">${data.timestamp}</span>
+                    <span>${escapeHtml(data.user)}</span>
+                    <span>${data.timestamp}</span>
                 </div>
-                <div class="msg-body media-msg">
-                    <img src="${data.url}" alt="${data.type}">
-                </div>
-            `);
+                <div class="msg-body"><img src="${data.url}" alt="media"></div>
+            `, isMine ? 'mine' : '');
         });
 
         socket.on('receive-file', (data) => {
+            const isMine = data.user === username;
             appendMessage(`
                 <div class="msg-header">
-                    <span class="user">${escapeHtml(data.user)}</span>
-                    <span class="time">${data.timestamp}</span>
+                    <span>${escapeHtml(data.user)}</span>
+                    <span>${data.timestamp}</span>
                 </div>
                 <div class="msg-body">
-                    Shared a file: <a href="${data.fileUrl}" target="_blank" download>${escapeHtml(data.fileName)}</a>
+                    📎 <a href="${data.fileUrl}" target="_blank" download style="color: inherit; text-decoration: underline;">${escapeHtml(data.fileName)}</a>
                 </div>
-            `);
-        });
-
-        socket.on('system-notification', (text) => {
-            appendMessage(`<span class="system-text">${escapeHtml(text)}</span>`, 'system-message');
+            `, isMine ? 'mine' : '');
         });
 
         function appendMessage(content, extraClass = '') {
