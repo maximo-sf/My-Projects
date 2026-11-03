@@ -2,13 +2,12 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const multer = require('multer');
-const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-// Configuración de almacenamiento para archivos subidos
+// Configuración de multer para subida de archivos
 const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, 'public/uploads/'),
     filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
@@ -25,8 +24,10 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
     });
 });
 
-// Estado de la aplicación en memoria
-const channels = ['general', 'dudas', 'anuncios'];
+// Configuración de canales y contraseña del Historial Privado
+const SECRET_HISTORY_PASSWORD = 'admin'; // Cambia 'admin' por la contraseña que tú quieras
+const channels = ['general', 'dudas', 'anuncios', 'historial'];
+const messageHistory = []; // Almacena el historial global
 const activePolls = {};
 let pinnedMessage = null;
 
@@ -42,25 +43,44 @@ io.on('connection', (socket) => {
         io.emit('system-notification', `${currentUser} se ha unido a la red.`);
     });
 
-    // Cambio de canal
-    socket.on('switch-channel', (newChannel) => {
-        if (channels.includes(newChannel)) {
+    // Verificación de canal privado / historial
+    socket.on('switch-channel', (data) => {
+        const targetChannel = typeof data === 'string' ? data : data.channel;
+        const passwordInput = data.password;
+
+        if (targetChannel === 'historial') {
+            if (passwordInput !== SECRET_HISTORY_PASSWORD) {
+                return socket.emit('access-denied', 'Contraseña incorrecta para el canal Historial.');
+            }
+        }
+
+        if (channels.includes(targetChannel)) {
             socket.leave(currentChannel);
-            currentChannel = newChannel;
+            currentChannel = targetChannel;
             socket.join(currentChannel);
-            socket.emit('channel-switched', { channel: currentChannel, pinnedMessage });
+            
+            // Si entra al historial, le enviamos todos los mensajes registrados
+            socket.emit('channel-switched', { 
+                channel: currentChannel, 
+                pinnedMessage,
+                history: currentChannel === 'historial' ? messageHistory : []
+            });
         }
     });
 
-    // Envío de mensajes normales y respuestas
+    // Envío de mensajes normales
     socket.on('send-message', (data) => {
         const payload = {
             id: Date.now(),
             user: currentUser,
             text: data.text,
+            channel: currentChannel,
             replyTo: data.replyTo || null,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         };
+        
+        // Guardar en el historial global
+        messageHistory.push(payload);
         io.to(currentChannel).emit('receive-message', payload);
     });
 
@@ -70,31 +90,37 @@ io.on('connection', (socket) => {
         io.emit('update-pinned', pinnedMessage);
     });
 
-    // Indicador de "Escribiendo..."
+    // Indicador de escribiendo
     socket.on('typing', (isTyping) => {
         socket.to(currentChannel).emit('user-typing', { user: currentUser, isTyping });
     });
 
-    // Envío de archivos y multimedia
+    // Multimedia y archivos
     socket.on('send-media', (data) => {
-        io.to(currentChannel).emit('receive-media', {
+        const payload = {
             user: currentUser,
             type: data.type,
             url: data.url,
+            channel: currentChannel,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        });
+        };
+        messageHistory.push(payload);
+        io.to(currentChannel).emit('receive-media', payload);
     });
 
     socket.on('share-file', (data) => {
-        io.to(currentChannel).emit('receive-file', {
+        const payload = {
             user: currentUser,
             fileName: data.fileName,
             fileUrl: data.fileUrl,
+            channel: currentChannel,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        });
+        };
+        messageHistory.push(payload);
+        io.to(currentChannel).emit('receive-file', payload);
     });
 
-    // Sistema de Encuestas (Polls)
+    // Encuestas
     socket.on('create-poll', (pollData) => {
         const pollId = 'poll_' + Date.now();
         activePolls[pollId] = {
@@ -114,14 +140,17 @@ io.on('connection', (socket) => {
         }
     });
 
-    // Dibujo en Pizarra
+    // Pizarra
     socket.on('share-drawing', (dataUrl) => {
-        io.to(currentChannel).emit('receive-media', {
+        const payload = {
             user: currentUser,
             type: 'drawing',
             url: dataUrl,
+            channel: currentChannel,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        });
+        };
+        messageHistory.push(payload);
+        io.to(currentChannel).emit('receive-media', payload);
     });
 });
 

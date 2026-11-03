@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Classroom LAN Chat Ultimate</title>
     <style>
+        /* Variables Modo Oscuro (Por defecto) */
         :root {
             --bg-dark: #0f172a;
             --bg-panel: #1e293b;
@@ -18,8 +19,22 @@
             --border-color: #334155;
         }
 
+        /* Variables Modo Claro */
+        body.light-theme {
+            --bg-dark: #e2e8f0;
+            --bg-panel: #ffffff;
+            --bg-sidebar: #f1f5f9;
+            --bg-element: #cbd5e1;
+            --accent-blue: #0284c7;
+            --accent-green: #16a34a;
+            --accent-purple: #9333ea;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); height: 100vh; display: flex; justify-content: center; align-items: center; padding: 15px; }
+        body { background-color: var(--bg-dark); color: var(--text-main); height: 100vh; display: flex; justify-content: center; align-items: center; padding: 15px; transition: background-color 0.3s, color 0.3s; }
 
         #app-layout {
             display: flex;
@@ -29,23 +44,24 @@
             background: var(--bg-panel);
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
             border: 1px solid var(--border-color);
         }
 
-        /* Sidebar Sidebar */
         #sidebar { width: 260px; background: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 20px; }
-        .brand { font-size: 1.1rem; color: var(--text-main); font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+        .brand { font-size: 1.1rem; color: var(--text-main); font-weight: 700; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
         
         .section-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin: 15px 0 8px 0; font-weight: 700; }
         
         .channel-list { list-style: none; margin-bottom: 20px; }
-        .channel-btn { width: 100%; text-align: left; background: none; border: none; color: var(--text-muted); padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .channel-btn { width: 100%; text-align: left; background: none; border: none; color: var(--text-muted); padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; justify-content: space-between; }
         .channel-btn:hover, .channel-btn.active { background: var(--bg-element); color: var(--accent-blue); }
+
+        .theme-toggle { background: var(--bg-element); border: none; color: var(--text-main); padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
 
         .search-box input { width: 100%; background: var(--bg-panel); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 8px; color: var(--text-main); font-size: 0.85rem; outline: none; }
 
-        /* Area Principal */
+        /* Área Principal */
         #chat-main { flex: 1; display: flex; flex-direction: column; position: relative; }
         #chat-header { padding: 16px 24px; background: var(--bg-panel); border-bottom: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 6px; }
         
@@ -57,25 +73,23 @@
         .message-card.mine { align-self: flex-end; flex-direction: row-reverse; }
 
         .msg-content { background: var(--bg-element); padding: 12px 16px; border-radius: 12px; font-size: 0.95rem; line-height: 1.4; word-wrap: break-word; position: relative; }
-        .message-card.mine .msg-content { background: var(--accent-blue); color: #0f172a; }
+        .message-card.mine .msg-content { background: var(--accent-blue); color: #fff; }
 
-        .msg-header { display: flex; justify-content: space-between; gap: 12px; font-size: 0.75rem; opacity: 0.8; margin-bottom: 4px; font-weight: 600; }
-        .reply-preview { font-size: 0.75rem; background: rgba(0,0,0,0.2); padding: 4px 8px; border-radius: 6px; margin-bottom: 6px; border-left: 3px solid var(--accent-purple); }
+        .msg-header { display: flex; justify-content: space-between; gap: 12px; font-size: 0.75rem; opacity: 0.85; margin-bottom: 4px; font-weight: 600; }
+        .reply-preview { font-size: 0.75rem; background: rgba(0,0,0,0.15); padding: 4px 8px; border-radius: 6px; margin-bottom: 6px; border-left: 3px solid var(--accent-purple); }
 
         .avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.85rem; color: #fff; flex-shrink: 0; }
 
-        /* Modales y Paneles Popups */
+        /* Modales */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
         .modal-body { background: var(--bg-panel); border: 1px solid var(--border-color); padding: 20px; border-radius: 12px; width: 350px; display: flex; flex-direction: column; gap: 12px; }
-        .modal-body input { padding: 8px 12px; background: var(--bg-sidebar); border: 1px solid var(--border-color); color: #fff; border-radius: 6px; }
+        .modal-body input { padding: 8px 12px; background: var(--bg-sidebar); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 6px; }
 
-        /* Pizarra */
         #canvas-board { background: #fff; border-radius: 8px; cursor: crosshair; }
 
-        /* Encuestas (Poll Cards) */
         .poll-card { background: var(--bg-sidebar); border: 1px solid var(--border-color); padding: 14px; border-radius: 12px; width: 280px; margin-top: 6px; }
-        .poll-option { background: var(--bg-element); border: none; color: #fff; width: 100%; padding: 8px; border-radius: 6px; margin-top: 6px; cursor: pointer; text-align: left; display: flex; justify-content: space-between; font-size: 0.85rem; }
-        .poll-option:hover { background: var(--accent-blue); color: #000; }
+        .poll-option { background: var(--bg-element); border: none; color: var(--text-main); width: 100%; padding: 8px; border-radius: 6px; margin-top: 6px; cursor: pointer; text-align: left; display: flex; justify-content: space-between; font-size: 0.85rem; }
+        .poll-option:hover { background: var(--accent-blue); color: #fff; }
 
         /* Footer */
         #typing-indicator { font-size: 0.8rem; color: var(--text-muted); padding: 4px 24px; height: 20px; font-style: italic; }
@@ -86,8 +100,8 @@
         #message-input { flex: 1; background: var(--bg-panel); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 10px; color: var(--text-main); outline: none; }
 
         .btn-action { background: var(--bg-element); border: none; color: var(--text-main); padding: 10px 14px; border-radius: 10px; cursor: pointer; font-size: 1rem; }
-        .btn-action:hover { background: var(--accent-blue); color: #0f172a; }
-        #send-btn { background: var(--accent-blue); color: #0f172a; font-weight: 700; padding: 10px 18px; }
+        .btn-action:hover { background: var(--accent-blue); color: #fff; }
+        #send-btn { background: var(--accent-blue); color: #fff; font-weight: 700; padding: 10px 18px; }
 
         .picker-container { position: absolute; bottom: 80px; right: 24px; width: 320px; height: 320px; background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 12px; display: none; flex-direction: column; z-index: 100; }
         .picker-tabs { display: flex; background: var(--bg-sidebar); border-bottom: 1px solid var(--border-color); }
@@ -102,13 +116,17 @@
 <body>
     <div id="app-layout">
         <aside id="sidebar">
-            <div class="brand">🏫 Classroom LAN</div>
+            <div class="brand">
+                <span>🏫 Classroom LAN</span>
+                <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">🌙</button>
+            </div>
 
             <div class="section-title">Canales</div>
             <ul class="channel-list">
                 <li><button class="channel-btn active" onclick="switchChannel('general')"># general</button></li>
                 <li><button class="channel-btn" onclick="switchChannel('dudas')"># dudas</button></li>
                 <li><button class="channel-btn" onclick="switchChannel('anuncios')"># anuncios</button></li>
+                <li><button class="channel-btn" onclick="switchChannel('historial')">🔒 # historial</button></li>
             </ul>
 
             <div class="section-title">Herramientas</div>
@@ -116,7 +134,7 @@
             <button class="btn-action" style="width:100%; margin-bottom:15px; font-size:0.85rem;" onclick="openModal('whiteboard-modal')">🎨 Pizarra / Dibujo</button>
 
             <div class="search-box">
-                <input type="text" id="search-input" placeholder="🔍 Buscar en chat...">
+                <input type="text" id="search-input" placeholder="🔍 Buscar mensaje...">
             </div>
         </aside>
 
@@ -156,14 +174,25 @@
         </main>
     </div>
 
+    <!-- Modal Contraseña Historial -->
+    <div id="password-modal" class="modal">
+        <div class="modal-body">
+            <h3>🔒 Canal Historial Protegido</h3>
+            <p style="font-size:0.85rem; color:var(--text-muted);">Ingresa la contraseña para acceder al registro global:</p>
+            <input type="password" id="history-pass-input" placeholder="Contraseña...">
+            <button class="btn-action" style="background:var(--accent-blue); color:#fff;" onclick="submitHistoryPassword()">Acceder</button>
+            <button class="btn-action" onclick="closeModal('password-modal')">Cancelar</button>
+        </div>
+    </div>
+
     <!-- Modal Encuesta -->
     <div id="poll-modal" class="modal">
         <div class="modal-body">
             <h3>📊 Crear Encuesta</h3>
-            <input type="text" id="poll-q" placeholder="Pregunta de la encuesta...">
+            <input type="text" id="poll-q" placeholder="Pregunta...">
             <input type="text" id="poll-opt1" placeholder="Opción 1">
             <input type="text" id="poll-opt2" placeholder="Opción 2">
-            <button class="btn-action" style="background:var(--accent-blue); color:#000;" onclick="submitPoll()">Lanzar Encuesta</button>
+            <button class="btn-action" style="background:var(--accent-blue); color:#fff;" onclick="submitPoll()">Lanzar Encuesta</button>
             <button class="btn-action" onclick="closeModal('poll-modal')">Cancelar</button>
         </div>
     </div>
@@ -174,7 +203,7 @@
             <h3>🎨 Pizarra de Dibujo</h3>
             <canvas id="canvas-board" width="400" height="300"></canvas>
             <div style="display:flex; gap:10px; margin-top:10px;">
-                <button class="btn-action" style="background:var(--accent-green); color:#000;" onclick="sendDrawing()">Compartir al Chat</button>
+                <button class="btn-action" style="background:var(--accent-green); color:#fff;" onclick="sendDrawing()">Compartir al Chat</button>
                 <button class="btn-action" onclick="clearCanvas()">Limpiar</button>
                 <button class="btn-action" onclick="closeModal('whiteboard-modal')">Cerrar</button>
             </div>
@@ -205,6 +234,14 @@
         const searchInput = document.getElementById('search-input');
         
         let currentReply = null;
+        let selectedChannel = 'general';
+
+        // Alternar Tema Claro / Oscuro
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            const btn = document.getElementById('theme-btn');
+            btn.innerText = document.body.classList.contains('light-theme') ? '☀️' : '🌙';
+        }
 
         function getAvatarColor(name) {
             let hash = 0;
@@ -226,27 +263,61 @@
             } catch (e) {}
         }
 
-        // Canales
+        // Gestión de Canales
         function switchChannel(channelName) {
+            if (channelName === 'historial') {
+                selectedChannel = 'historial';
+                openModal('password-modal');
+                return;
+            }
+            changeChannelDirect(channelName);
+        }
+
+        function submitHistoryPassword() {
+            const pass = document.getElementById('history-pass-input').value;
+            socket.emit('switch-channel', { channel: 'historial', password: pass });
+            document.getElementById('history-pass-input').value = '';
+            closeModal('password-modal');
+        }
+
+        function changeChannelDirect(channelName) {
             document.querySelectorAll('.channel-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            if (event && event.target) event.target.classList.add('active');
             document.getElementById('current-channel-title').innerText = `# ${channelName}`;
             messagesContainer.innerHTML = '';
-            socket.emit('switch-channel', channelName);
+            socket.emit('switch-channel', { channel: channelName });
         }
+
+        socket.on('access-denied', (msg) => alert(msg));
+
+        socket.on('channel-switched', (data) => {
+            document.getElementById('current-channel-title').innerText = `# ${data.channel}`;
+            messagesContainer.innerHTML = '';
+            
+            // Si accedemos al historial, cargamos todos los mensajes pasados
+            if (data.history && data.history.length > 0) {
+                data.history.forEach(msg => {
+                    const isMine = msg.user === username;
+                    if (msg.text) {
+                        appendMessage(msg.user, msg.timestamp, escapeHtml(msg.text), isMine, msg.text);
+                    } else if (msg.url) {
+                        appendMessage(msg.user, msg.timestamp, `<img src="${msg.url}" style="max-width:200px; border-radius:8px;">`, isMine);
+                    } else if (msg.fileUrl) {
+                        appendMessage(msg.user, msg.timestamp, `📎 <a href="${msg.fileUrl}" target="_blank" download style="color:inherit;">${escapeHtml(msg.fileName)}</a>`, isMine);
+                    }
+                });
+            }
+        });
 
         // Fijar Mensaje
-        function pinMessage(text) {
-            socket.emit('pin-message', text);
-        }
-
+        function pinMessage(text) { socket.emit('pin-message', text); }
         socket.on('update-pinned', (data) => {
             const bar = document.getElementById('pinned-bar');
             document.getElementById('pinned-text').innerText = `${data.user}: ${data.text}`;
             bar.style.display = 'flex';
         });
 
-        // Respuestas (Replies)
+        // Respuestas
         function setReply(user, text) {
             currentReply = { user, text };
             document.getElementById('reply-target-text').innerText = `Respondiendo a ${user}: "${text.substring(0, 20)}..."`;
@@ -300,7 +371,7 @@
             return div;
         }
 
-        // Pizarra (Canvas)
+        // Pizarra
         const canvas = document.getElementById('canvas-board');
         const ctx = canvas.getContext('2d');
         let drawing = false;
@@ -349,7 +420,7 @@
             typingIndicator.innerText = data.isTyping ? `${data.user} está escribiendo...` : '';
         });
 
-        // Multimedia y Emojis
+        // Emojis y GIFs
         const emojis = ['😀', '😂', '😍', '😎', '👍', '🔥', '🎉', '🚀', '💯', '❤️', '🙌', '💩', '🤝', '⚡'];
         const gifs = ['https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHIxZ2s5ZzN0czJ3aWZocmdyZ3V4Nm9icXpzaTRscW16eWtlcnd4dyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/lhLIQcznZP77ZTLJnP/giphy.gif'];
 
