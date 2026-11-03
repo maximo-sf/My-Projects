@@ -75,7 +75,16 @@ io.on('connection', (socket) => {
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         });
     });
-
+    
+    socket.on('send-media', (data) => {
+        io.emit('receive-media', {
+            user: currentUser,
+            type: data.type,
+            url: data.url,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        });
+    });
+    
     socket.on('disconnect', () => {
         io.emit('system-notification', `${currentUser} left the chat`);
     });
