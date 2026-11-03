@@ -292,18 +292,23 @@
 
         socket.on('channel-switched', (data) => {
             document.getElementById('current-channel-title').innerText = `# ${data.channel}`;
-            messagesContainer.innerHTML = '';
-            
-            // Si accedemos al historial, cargamos todos los mensajes pasados
+            messagesContainer.innerHTML = ''; // Limpiamos la vista actual
+
+            // Renderizamos el historial guardado de ese canal específico
             if (data.history && data.history.length > 0) {
                 data.history.forEach(msg => {
                     const isMine = msg.user === username;
-                    if (msg.text) {
-                        appendMessage(msg.user, msg.timestamp, escapeHtml(msg.text), isMine, msg.text);
-                    } else if (msg.url) {
-                        appendMessage(msg.user, msg.timestamp, `<img src="${msg.url}" style="max-width:200px; border-radius:8px;">`, isMine);
-                    } else if (msg.fileUrl) {
-                        appendMessage(msg.user, msg.timestamp, `📎 <a href="${msg.fileUrl}" target="_blank" download style="color:inherit;">${escapeHtml(msg.fileName)}</a>`, isMine);
+                    
+                    if (msg.type === 'text' || msg.text) {
+                        let replyHtml = '';
+                        if (msg.replyTo) {
+                            replyHtml = `<div class="reply-preview">↳ ${escapeHtml(msg.replyTo.user)}: ${escapeHtml(msg.replyTo.text)}</div>`;
+                        }
+                        appendMessage(msg.user, msg.timestamp, replyHtml + escapeHtml(msg.text), isMine, msg.text);
+                    } else if (msg.type === 'media' || msg.url) {
+                        appendMessage(msg.user, msg.timestamp, `<img src="${msg.url}" style="max-width:200px; border-radius:8px;">`, isMine, 'Medio interactivo');
+                    } else if (msg.type === 'file' || msg.fileUrl) {
+                        appendMessage(msg.user, msg.timestamp, `📎 <a href="${msg.fileUrl}" target="_blank" download style="color:inherit;">${escapeHtml(msg.fileName)}</a>`, isMine, 'Archivo compartido');
                     }
                 });
             }
