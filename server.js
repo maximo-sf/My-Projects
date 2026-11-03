@@ -59,6 +59,13 @@ io.on('connection', (socket) => {
         io.emit('system-notification', `${currentUser} joined the chat`);
     });
 
+
+    socket.on('typing', (isTyping) => {
+    socket.broadcast.emit('user-typing', {
+        user: socket.username || 'Un compañero',
+        isTyping: isTyping
+        });
+    });
     socket.on('send-message', (data) => {
         io.emit('receive-message', {
             user: currentUser,
