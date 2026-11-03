@@ -7,7 +7,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-// Configuración de almacenamiento para archivos
+// Configuración de multer
 const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, 'public/uploads/'),
     filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
@@ -24,20 +24,27 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
     });
 });
 
-// Configuración de Canales e Historial por Canal
-const SECRET_HISTORY_PASSWORD = 'admin'; // Cambia esta contraseña si deseas
+const SECRET_HISTORY_PASSWORD = 'admin';
 const channels = ['general', 'dudas', 'anuncios', 'historial'];
 
-// Historial estructurado por cada canal
 const channelHistories = {
     general: [],
     dudas: [],
     anuncios: [],
-    historial: [] // Guarda el registro global de todo lo que ocurre
+    historial: []
 };
 
+// Registro de usuarios conectados
+const connectedUsers = new Map(); // socket.id -> { username, channel }
 const activePolls = {};
 let pinnedMessage = null;
+
+function broadcastUsersList() {
+    const usersArray = Array.from(connectedUsers.values()).map(u => u.username);
+    // Eliminar duplicados si un usuario tiene varias pestañas
+    const uniqueUsers = [...new Set(usersArray)];
+    io.emit('update-user-list', uniqueUsers);
+}
 
 io.on('connection', (socket) => {
     let currentUser = 'Anónimo';
@@ -48,10 +55,12 @@ io.on('connection', (socket) => {
     socket.on('user-join', (username) => {
         currentUser = username;
         socket.username = username;
+        connectedUsers.set(socket.id, { username, channel: currentChannel });
+        
         io.emit('system-notification', `${currentUser} se ha unido a la red.`);
+        broadcastUsersList();
     });
 
-    // Cambio de canal guardando y enviando su historial
     socket.on('switch-channel', (data) => {
         const targetChannel = typeof data === 'string' ? data : data.channel;
         const passwordInput = data.password;
@@ -66,8 +75,11 @@ io.on('connection', (socket) => {
             socket.leave(currentChannel);
             currentChannel = targetChannel;
             socket.join(currentChannel);
-            
-            // Envía el historial acumulado en ese canal específico (o todo si es #historial)
+
+            if (connectedUsers.has(socket.id)) {
+                connectedUsers.get(socket.id).channel = currentChannel;
+            }
+
             const historyToSend = targetChannel === 'historial' 
                 ? channelHistories.historial 
                 : (channelHistories[targetChannel] || []);
@@ -80,23 +92,46 @@ io.on('connection', (socket) => {
         }
     });
 
-    // Envío de mensajes normales
+    // Envío de mensajes
     socket.on('send-message', (data) => {
         const payload = {
             type: 'text',
-            id: Date.now(),
+            id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
             user: currentUser,
             text: data.text,
             channel: currentChannel,
             replyTo: data.replyTo || null,
+            reactions: {}, // { "👍": ["User1", "User2"] }
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         };
         
-        // Guardar en el historial del canal actual y en el historial global
         if (channelHistories[currentChannel]) channelHistories[currentChannel].push(payload);
         channelHistories.historial.push(payload);
 
         io.to(currentChannel).emit('receive-message', payload);
+    });
+
+    // Sistema de Reacciones con Emojis
+    socket.on('react-message', ({ msgId, emoji }) => {
+        const history = channelHistories[currentChannel] || [];
+        const msg = history.find(m => m.id === msgId) || channelHistories.historial.find(m => m.id === msgId);
+
+        if (msg) {
+            if (!msg.reactions) msg.reactions = {};
+            if (!msg.reactions[emoji]) msg.reactions[emoji] = [];
+
+            const userIndex = msg.reactions[emoji].indexOf(currentUser);
+            if (userIndex > -1) {
+                // Quitar reacción si ya existía
+                msg.reactions[emoji].splice(userIndex, 1);
+                if (msg.reactions[emoji].length === 0) delete msg.reactions[emoji];
+            } else {
+                // Añadir reacción
+                msg.reactions[emoji].push(currentUser);
+            }
+
+            io.to(currentChannel).emit('update-message-reactions', { msgId, reactions: msg.reactions });
+        }
     });
 
     // Fijar mensaje
@@ -105,19 +140,21 @@ io.on('connection', (socket) => {
         io.emit('update-pinned', pinnedMessage);
     });
 
-    // Indicador de "Escribiendo..."
+    // Indicador "Escribiendo..."
     socket.on('typing', (isTyping) => {
         socket.to(currentChannel).emit('user-typing', { user: currentUser, isTyping });
     });
 
-    // Envío de imágenes / GIFs / Pizarra
+    // Multimedia
     socket.on('send-media', (data) => {
         const payload = {
             type: 'media',
+            id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
             mediaType: data.type,
             user: currentUser,
             url: data.url,
             channel: currentChannel,
+            reactions: {},
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         };
         if (channelHistories[currentChannel]) channelHistories[currentChannel].push(payload);
@@ -126,14 +163,16 @@ io.on('connection', (socket) => {
         io.to(currentChannel).emit('receive-media', payload);
     });
 
-    // Envío de archivos
+    // Archivos
     socket.on('share-file', (data) => {
         const payload = {
             type: 'file',
+            id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
             user: currentUser,
             fileName: data.fileName,
             fileUrl: data.fileUrl,
             channel: currentChannel,
+            reactions: {},
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         };
         if (channelHistories[currentChannel]) channelHistories[currentChannel].push(payload);
@@ -166,16 +205,26 @@ io.on('connection', (socket) => {
     socket.on('share-drawing', (dataUrl) => {
         const payload = {
             type: 'media',
+            id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
             mediaType: 'drawing',
             user: currentUser,
             url: dataUrl,
             channel: currentChannel,
+            reactions: {},
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         };
         if (channelHistories[currentChannel]) channelHistories[currentChannel].push(payload);
         channelHistories.historial.push(payload);
 
         io.to(currentChannel).emit('receive-media', payload);
+    });
+
+    // Desconexión de usuario
+    socket.on('disconnect', () => {
+        if (connectedUsers.has(socket.id)) {
+            connectedUsers.delete(socket.id);
+            broadcastUsersList();
+        }
     });
 });
 

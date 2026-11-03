@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Classroom LAN Chat Ultimate</title>
     <style>
-        /* Variables Modo Oscuro (Por defecto) */
         :root {
             --bg-dark: #0f172a;
             --bg-panel: #1e293b;
@@ -19,7 +18,6 @@
             --border-color: #334155;
         }
 
-        /* Variables Modo Claro */
         body.light-theme {
             --bg-dark: #e2e8f0;
             --bg-panel: #ffffff;
@@ -34,7 +32,7 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); height: 100vh; display: flex; justify-content: center; align-items: center; padding: 15px; transition: background-color 0.3s, color 0.3s; }
+        body { background-color: var(--bg-dark); color: var(--text-main); height: 100vh; display: flex; justify-content: center; align-items: center; padding: 15px; transition: background-color 0.3s; }
 
         #app-layout {
             display: flex;
@@ -51,17 +49,21 @@
         #sidebar { width: 260px; background: var(--bg-sidebar); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 20px; }
         .brand { font-size: 1.1rem; color: var(--text-main); font-weight: 700; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
         
-        .section-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin: 15px 0 8px 0; font-weight: 700; }
+        .section-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin: 12px 0 8px 0; font-weight: 700; }
         
-        .channel-list { list-style: none; margin-bottom: 20px; }
+        .channel-list { list-style: none; margin-bottom: 10px; }
         .channel-btn { width: 100%; text-align: left; background: none; border: none; color: var(--text-muted); padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; justify-content: space-between; }
         .channel-btn:hover, .channel-btn.active { background: var(--bg-element); color: var(--accent-blue); }
 
-        .theme-toggle { background: var(--bg-element); border: none; color: var(--text-main); padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
+        /* Lista de Usuarios Conectados */
+        #user-list { list-style: none; flex: 1; overflow-y: auto; margin-bottom: 10px; }
+        #user-list li { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 6px; font-size: 0.85rem; }
+        .status-dot { width: 8px; height: 8px; background: var(--accent-green); border-radius: 50%; box-shadow: 0 0 6px var(--accent-green); flex-shrink: 0; }
 
+        .theme-toggle { background: var(--bg-element); border: none; color: var(--text-main); padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
         .search-box input { width: 100%; background: var(--bg-panel); border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 8px; color: var(--text-main); font-size: 0.85rem; outline: none; }
 
-        /* Área Principal */
+        /* Area Principal */
         #chat-main { flex: 1; display: flex; flex-direction: column; position: relative; }
         #chat-header { padding: 16px 24px; background: var(--bg-panel); border-bottom: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 6px; }
         
@@ -77,6 +79,13 @@
 
         .msg-header { display: flex; justify-content: space-between; gap: 12px; font-size: 0.75rem; opacity: 0.85; margin-bottom: 4px; font-weight: 600; }
         .reply-preview { font-size: 0.75rem; background: rgba(0,0,0,0.15); padding: 4px 8px; border-radius: 6px; margin-bottom: 6px; border-left: 3px solid var(--accent-purple); }
+
+        /* Reacciones */
+        .reactions-bar { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
+        .reaction-badge { background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 12px; padding: 2px 6px; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 3px; }
+        .reaction-badge:hover { background: var(--accent-blue); color: #000; }
+        .quick-react-btn { background: none; border: none; cursor: pointer; font-size: 0.75rem; opacity: 0.7; margin-left: 4px; }
+        .quick-react-btn:hover { opacity: 1; }
 
         .avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.85rem; color: #fff; flex-shrink: 0; }
 
@@ -129,9 +138,12 @@
                 <li><button class="channel-btn" onclick="switchChannel('historial')">🔒 # historial</button></li>
             </ul>
 
+            <div class="section-title">Conectados (<span id="user-count">0</span>)</div>
+            <ul id="user-list"></ul>
+
             <div class="section-title">Herramientas</div>
             <button class="btn-action" style="width:100%; margin-bottom:8px; font-size:0.85rem;" onclick="openModal('poll-modal')">📊 Crear Encuesta</button>
-            <button class="btn-action" style="width:100%; margin-bottom:15px; font-size:0.85rem;" onclick="openModal('whiteboard-modal')">🎨 Pizarra / Dibujo</button>
+            <button class="btn-action" style="width:100%; margin-bottom:12px; font-size:0.85rem;" onclick="openModal('whiteboard-modal')">🎨 Pizarra / Dibujo</button>
 
             <div class="search-box">
                 <input type="text" id="search-input" placeholder="🔍 Buscar mensaje...">
@@ -174,18 +186,17 @@
         </main>
     </div>
 
-    <!-- Modal Contraseña Historial -->
+    <!-- Modales -->
     <div id="password-modal" class="modal">
         <div class="modal-body">
             <h3>🔒 Canal Historial Protegido</h3>
-            <p style="font-size:0.85rem; color:var(--text-muted);">Ingresa la contraseña para acceder al registro global:</p>
+            <p style="font-size:0.85rem; color:var(--text-muted);">Ingresa la contraseña:</p>
             <input type="password" id="history-pass-input" placeholder="Contraseña...">
             <button class="btn-action" style="background:var(--accent-blue); color:#fff;" onclick="submitHistoryPassword()">Acceder</button>
             <button class="btn-action" onclick="closeModal('password-modal')">Cancelar</button>
         </div>
     </div>
 
-    <!-- Modal Encuesta -->
     <div id="poll-modal" class="modal">
         <div class="modal-body">
             <h3>📊 Crear Encuesta</h3>
@@ -197,7 +208,6 @@
         </div>
     </div>
 
-    <!-- Modal Pizarra -->
     <div id="whiteboard-modal" class="modal">
         <div class="modal-body" style="width: auto;">
             <h3>🎨 Pizarra de Dibujo</h3>
@@ -232,15 +242,25 @@
         const pickerBody = document.getElementById('picker-body');
         const typingIndicator = document.getElementById('typing-indicator');
         const searchInput = document.getElementById('search-input');
+        const userListContainer = document.getElementById('user-list');
+        const userCountBadge = document.getElementById('user-count');
         
         let currentReply = null;
-        let selectedChannel = 'general';
 
-        // Alternar Tema Claro / Oscuro
+        // Actualizar lista de usuarios conectados
+        socket.on('update-user-list', (users) => {
+            userCountBadge.innerText = users.length;
+            userListContainer.innerHTML = '';
+            users.forEach(u => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span class="status-dot"></span> <span>${escapeHtml(u)}</span> ${u === username ? '<small>(Tú)</small>' : ''}`;
+                userListContainer.appendChild(li);
+            });
+        });
+
         function toggleTheme() {
             document.body.classList.toggle('light-theme');
-            const btn = document.getElementById('theme-btn');
-            btn.innerText = document.body.classList.contains('light-theme') ? '☀️' : '🌙';
+            document.getElementById('theme-btn').innerText = document.body.classList.contains('light-theme') ? '☀️' : '🌙';
         }
 
         function getAvatarColor(name) {
@@ -263,10 +283,9 @@
             } catch (e) {}
         }
 
-        // Gestión de Canales
+        // Canales
         function switchChannel(channelName) {
             if (channelName === 'historial') {
-                selectedChannel = 'historial';
                 openModal('password-modal');
                 return;
             }
@@ -292,29 +311,54 @@
 
         socket.on('channel-switched', (data) => {
             document.getElementById('current-channel-title').innerText = `# ${data.channel}`;
-            messagesContainer.innerHTML = ''; // Limpiamos la vista actual
-
-            // Renderizamos el historial guardado de ese canal específico
+            messagesContainer.innerHTML = '';
+            
             if (data.history && data.history.length > 0) {
                 data.history.forEach(msg => {
                     const isMine = msg.user === username;
-                    
+                    let body = '';
                     if (msg.type === 'text' || msg.text) {
-                        let replyHtml = '';
-                        if (msg.replyTo) {
-                            replyHtml = `<div class="reply-preview">↳ ${escapeHtml(msg.replyTo.user)}: ${escapeHtml(msg.replyTo.text)}</div>`;
-                        }
-                        appendMessage(msg.user, msg.timestamp, replyHtml + escapeHtml(msg.text), isMine, msg.text);
+                        let replyHtml = msg.replyTo ? `<div class="reply-preview">↳ ${escapeHtml(msg.replyTo.user)}: ${escapeHtml(msg.replyTo.text)}</div>` : '';
+                        body = replyHtml + escapeHtml(msg.text);
                     } else if (msg.type === 'media' || msg.url) {
-                        appendMessage(msg.user, msg.timestamp, `<img src="${msg.url}" style="max-width:200px; border-radius:8px;">`, isMine, 'Medio interactivo');
+                        body = `<img src="${msg.url}" style="max-width:200px; border-radius:8px;">`;
                     } else if (msg.type === 'file' || msg.fileUrl) {
-                        appendMessage(msg.user, msg.timestamp, `📎 <a href="${msg.fileUrl}" target="_blank" download style="color:inherit;">${escapeHtml(msg.fileName)}</a>`, isMine, 'Archivo compartido');
+                        body = `📎 <a href="${msg.fileUrl}" target="_blank" download style="color:inherit;">${escapeHtml(msg.fileName)}</a>`;
                     }
+                    appendMessage(msg.id, msg.user, msg.timestamp, body, isMine, msg.text, msg.reactions);
                 });
             }
         });
 
-        // Fijar Mensaje
+        // Reacciones
+        function reactToMsg(msgId, emoji) {
+            socket.emit('react-message', { msgId, emoji });
+        }
+
+        socket.on('update-message-reactions', ({ msgId, reactions }) => {
+            const container = document.getElementById(`reactions-${msgId}`);
+            if (container) {
+                container.innerHTML = renderReactionsHtml(msgId, reactions);
+            }
+        });
+
+        function renderReactionsHtml(msgId, reactions = {}) {
+            let html = '';
+            for (const [emoji, users] of Object.entries(reactions)) {
+                if (users.length > 0) {
+                    html += `<span class="reaction-badge" onclick="reactToMsg('${msgId}', '${emoji}')">${emoji} ${users.length}</span>`;
+                }
+            }
+            // Botones rápidos para reaccionar
+            html += `
+                <button class="quick-react-btn" onclick="reactToMsg('${msgId}', '👍')">👍</button>
+                <button class="quick-react-btn" onclick="reactToMsg('${msgId}', '❤️')">❤️</button>
+                <button class="quick-react-btn" onclick="reactToMsg('${msgId}', '🔥')">🔥</button>
+            `;
+            return html;
+        }
+
+        // Fijar y Responder
         function pinMessage(text) { socket.emit('pin-message', text); }
         socket.on('update-pinned', (data) => {
             const bar = document.getElementById('pinned-bar');
@@ -322,7 +366,6 @@
             bar.style.display = 'flex';
         });
 
-        // Respuestas
         function setReply(user, text) {
             currentReply = { user, text };
             document.getElementById('reply-target-text').innerText = `Respondiendo a ${user}: "${text.substring(0, 20)}..."`;
@@ -334,11 +377,10 @@
             document.getElementById('reply-bar').style.display = 'none';
         }
 
-        // Modales
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-        // Encuestas
+        // Encuestas y Pizarra
         function submitPoll() {
             const q = document.getElementById('poll-q').value.trim();
             const opt1 = document.getElementById('poll-opt1').value.trim();
@@ -349,17 +391,16 @@
             }
         }
 
-        socket.on('receive-poll', (poll) => renderPoll(poll));
+        socket.on('receive-poll', (poll) => {
+            const el = createPollElement(poll.id, poll);
+            messagesContainer.appendChild(el);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        });
+
         socket.on('update-poll', ({ id, poll }) => {
             const existing = document.getElementById(id);
             if (existing) existing.replaceWith(createPollElement(id, poll));
         });
-
-        function renderPoll(poll) {
-            const el = createPollElement(poll.id, poll);
-            messagesContainer.appendChild(el);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
 
         function createPollElement(id, poll) {
             const div = document.createElement('div');
@@ -376,7 +417,6 @@
             return div;
         }
 
-        // Pizarra
         const canvas = document.getElementById('canvas-board');
         const ctx = canvas.getContext('2d');
         let drawing = false;
@@ -388,24 +428,18 @@
         function draw(e) {
             if (!drawing) return;
             const rect = canvas.getBoundingClientRect();
-            ctx.lineWidth = 3;
-            ctx.lineCap = 'round';
-            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.strokeStyle = '#000';
             ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+            ctx.stroke(); ctx.beginPath(); ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
         }
 
         function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
         function sendDrawing() {
-            const dataUrl = canvas.toDataURL();
-            socket.emit('share-drawing', dataUrl);
+            socket.emit('share-drawing', canvas.toDataURL());
             clearCanvas();
             closeModal('whiteboard-modal');
         }
 
-        // Buscador
         searchInput.addEventListener('input', (e) => {
             const filter = e.target.value.toLowerCase();
             document.querySelectorAll('.message-card').forEach(card => {
@@ -413,7 +447,6 @@
             });
         });
 
-        // Typing
         let typingTimeout;
         messageInput.addEventListener('input', () => {
             socket.emit('typing', true);
@@ -425,7 +458,6 @@
             typingIndicator.innerText = data.isTyping ? `${data.user} está escribiendo...` : '';
         });
 
-        // Emojis y GIFs
         const emojis = ['😀', '😂', '😍', '😎', '👍', '🔥', '🎉', '🚀', '💯', '❤️', '🙌', '💩', '🤝', '⚡'];
         const gifs = ['https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHIxZ2s5ZzN0czJ3aWZocmdyZ3V4Nm9icXpzaTRscW16eWtlcnd4dyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/lhLIQcznZP77ZTLJnP/giphy.gif'];
 
@@ -460,7 +492,6 @@
             }
         }
 
-        // Form Submit
         messageForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const text = messageInput.value.trim();
@@ -486,32 +517,26 @@
             finally { fileInput.value = ''; }
         });
 
-        // Eventos Socket
         socket.on('receive-message', (data) => {
             const isMine = data.user === username;
             if (!isMine) playSound();
-
-            let replyHtml = '';
-            if (data.replyTo) {
-                replyHtml = `<div class="reply-preview">↳ ${escapeHtml(data.replyTo.user)}: ${escapeHtml(data.replyTo.text)}</div>`;
-            }
-
-            appendMessage(data.user, data.timestamp, replyHtml + escapeHtml(data.text), isMine, data.text);
+            let replyHtml = data.replyTo ? `<div class="reply-preview">↳ ${escapeHtml(data.replyTo.user)}: ${escapeHtml(data.replyTo.text)}</div>` : '';
+            appendMessage(data.id, data.user, data.timestamp, replyHtml + escapeHtml(data.text), isMine, data.text, data.reactions);
         });
 
         socket.on('receive-media', (data) => {
             const isMine = data.user === username;
             if (!isMine) playSound();
-            appendMessage(data.user, data.timestamp, `<img src="${data.url}" style="max-width:200px; border-radius:8px;">`, isMine, 'Medio interactivo');
+            appendMessage(data.id, data.user, data.timestamp, `<img src="${data.url}" style="max-width:200px; border-radius:8px;">`, isMine, 'Medio interactivo', data.reactions);
         });
 
         socket.on('receive-file', (data) => {
             const isMine = data.user === username;
             if (!isMine) playSound();
-            appendMessage(data.user, data.timestamp, `📎 <a href="${data.fileUrl}" target="_blank" download style="color:inherit;">${escapeHtml(data.fileName)}</a>`, isMine, 'Archivo compartido');
+            appendMessage(data.id, data.user, data.timestamp, `📎 <a href="${data.fileUrl}" target="_blank" download style="color:inherit;">${escapeHtml(data.fileName)}</a>`, isMine, 'Archivo compartido', data.reactions);
         });
 
-        function appendMessage(user, time, body, isMine, rawText) {
+        function appendMessage(msgId, user, time, body, isMine, rawText, reactions = {}) {
             const avatarColor = getAvatarColor(user);
             const card = document.createElement('div');
             card.className = `message-card ${isMine ? 'mine' : ''}`;
@@ -527,6 +552,9 @@
                         </span>
                     </div>
                     <div>${body}</div>
+                    <div class="reactions-bar" id="reactions-${msgId}">
+                        ${renderReactionsHtml(msgId, reactions)}
+                    </div>
                 </div>
             `;
             messagesContainer.appendChild(card);
