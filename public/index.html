@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAN Classroom Chat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app-container">
+        <header id="chat-header">
+            <h2>Classroom LAN Chat</h2>
+            <span id="network-badge">Local Network</span>
+        </header>
+
+        <main id="chat-messages"></main>
+
+        <footer id="chat-footer">
+            <form id="message-form">
+                <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off" required>
+                <input type="file" id="file-input" style="display: none;">
+                <button type="button" id="attach-btn" title="Attach file">📎</button>
+                <button type="submit" id="send-btn">Send</button>
+            </form>
+        </footer>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const username = prompt('Enter your username:') || 'Student';
+
+        socket.emit('user-join', username);
+
+        const messagesContainer = document.getElementById('chat-messages');
+        const messageForm = document.getElementById('message-form');
+        const messageInput = document.getElementById('message-input');
+        const attachBtn = document.getElementById('attach-btn');
+        const fileInput = document.getElementById('file-input');
+
+        messageForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = messageInput.value.trim();
+            if (text) {
+                socket.emit('send-message', { text });
+                messageInput.value = '';
+            }
+        });
+
+        attachBtn.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', async () => {
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error('Upload failed');
+
+                const data = await response.json();
+                socket.emit('share-file', data);
+            } catch (err) {
+                alert('Error uploading file. Please try again.');
+            } finally {
+                fileInput.value = '';
+            }
+        });
+
+        socket.on('receive-message', (data) => {
+            appendMessage(`
+                <div class="msg-header">
+                    <span class="user">${escapeHtml(data.user)}</span>
+                    <span class="time">${data.timestamp}</span>
+                </div>
+                <div class="msg-body">${escapeHtml(data.text)}</div>
+            `);
+        });
+
+        socket.on('receive-file', (data) => {
+            appendMessage(`
+                <div class="msg-header">
+                    <span class="user">${escapeHtml(data.user)}</span>
+                    <span class="time">${data.timestamp}</span>
+                </div>
+                <div class="msg-body">
+                    Shared a file: <a href="${data.fileUrl}" target="_blank" download>${escapeHtml(data.fileName)}</a>
+                </div>
+            `, 'file-message');
+        });
+
+        socket.on('system-notification', (text) => {
+            appendMessage(`<span class="system-text">${escapeHtml(text)}</span>`, 'system-message');
+        });
+
+        function appendMessage(content, extraClass = '') {
+            const msgCard = document.createElement('div');
+            msgCard.className = `message-card ${extraClass}`;
+            msgCard.innerHTML = content;
+            messagesContainer.appendChild(msgCard);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
