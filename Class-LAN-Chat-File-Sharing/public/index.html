@@ -3,93 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Classroom Hub Pro</title>
+    <title>Classroom Hub Cyber-UI</title>
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
     <div id="app-layout">
-        <aside id="sidebar">
-            <div class="brand">
-                <span>🏫 Classroom Hub</span>
-                <button class="theme-btn" onclick="toggleTheme()">🌙</button>
-            </div>
+        <!-- Floating Dock Navigation -->
+        <nav id="floating-dock">
+            <button class="dock-btn active" title="Canal General" onclick="switchChannel('general')">💬</button>
+            <button class="dock-btn" title="Historial Protegido" onclick="switchChannel('historial')">🔒</button>
+            <div class="dock-separator"></div>
+            <button class="dock-btn" title="Pizarra Interactiva" onclick="openModal('whiteboard-modal')">🎨</button>
+            <button class="dock-btn" title="Crear Encuesta" onclick="openModal('poll-modal')">📊</button>
+        </nav>
 
-            <div class="sec-title">Canales</div>
-            <ul class="nav-list">
-                <li><button class="nav-btn active" onclick="switchChannel('general')">💬 # general</button></li>
-                <li><button class="nav-btn" onclick="switchChannel('historial')">🔒 # historial</button></li>
-            </ul>
-
-            <div class="sec-title">Canal de Voz en Vivo</div>
-            <div class="voice-card">
-                <button id="voice-toggle-btn" class="voice-btn join" onclick="toggleVoice()">🎙️ Unirme a Voz</button>
-                <div id="voice-wave" class="voice-wave">
-                    <span></span><span></span><span></span>
-                </div>
-                <ul id="voice-users-list"></ul>
-            </div>
-
-            <div class="sec-title">Conectados (<span id="user-count">0</span>)</div>
-            <ul id="user-list"></ul>
-
-            <div class="sec-title">Herramientas</div>
-            <button class="action-btn" style="width:100%" onclick="openModal('poll-modal')">📊 Crear Encuesta</button>
-            <button class="action-btn" style="width:100%" onclick="openModal('whiteboard-modal')">🎨 Pizarra Dibujo</button>
-        </aside>
-
-        <main id="chat-main">
+        <!-- Main Chat Canvas -->
+        <main id="chat-canvas">
             <header id="chat-header">
-                <h3 id="current-channel-title"># general</h3>
-                <div id="pinned-bar">📌 <span id="pinned-text"></span></div>
+                <div class="channel-tag">
+                    <span class="pulse-badge"></span>
+                    <span id="current-channel-title"># general</span>
+                </div>
+                <div style="font-size:0.85rem; color:var(--text-sub)">LAN Online: <b id="user-count" style="color:var(--neon-green)">0</b></div>
             </header>
 
-            <section id="chat-messages">
-                <!-- Welcome card se carga si está vacío -->
-            </section>
-
-            <div id="typing-indicator"></div>
+            <section id="chat-messages"></section>
 
             <footer id="chat-footer">
                 <form id="message-form">
-                    <input type="text" id="message-input" placeholder="Escribe un mensaje en el canal..." autocomplete="off" required>
-                    <input type="file" id="file-input" style="display:none">
-                    <button type="button" class="action-btn" onclick="document.getElementById('file-input').click()">📎</button>
-                    <button type="submit" class="action-btn" id="send-btn">Enviar</button>
+                    <div id="input-bar">
+                        <button type="button" class="icon-btn" onclick="document.getElementById('file-input').click()">📎</button>
+                        <input type="text" id="message-input" placeholder="Escribe un mensaje en tiempo real..." autocomplete="off" required>
+                        <input type="file" id="file-input" style="display:none">
+                        <button type="submit" id="send-btn">Enviar ⚡</button>
+                    </div>
                 </form>
             </footer>
         </main>
+
+        <!-- Right Control Panel -->
+        <aside id="right-panel">
+            <!-- Voice Module -->
+            <div class="glass-card">
+                <h4 style="margin-bottom:12px; font-size:0.9rem; color:var(--text-sub)">SALA DE VOZ P2P</h4>
+                <button id="voice-toggle-btn" class="dock-btn" style="width:100%; height:44px; font-size:0.9rem; font-weight:700" onclick="toggleVoice()">🎙️ Unirme a Audio</button>
+                <ul id="voice-users-list" style="margin-top:10px; font-size:0.8rem; list-style:none; color:var(--text-sub)"></ul>
+            </div>
+
+            <!-- Users Connected -->
+            <div class="glass-card" style="flex:1; display:flex; flex-direction:column">
+                <h4 style="margin-bottom:12px; font-size:0.9rem; color:var(--text-sub)">USUARIOS EN RED</h4>
+                <ul id="user-list" style="list-style:none; display:flex; flex-direction:column; gap:8px; font-size:0.85rem"></ul>
+            </div>
+        </aside>
     </div>
 
     <!-- Modales -->
     <div id="password-modal" class="modal">
         <div class="modal-body">
-            <h3>🔒 Canal Historial</h3>
-            <p style="font-size:0.85rem; color:var(--text-sub)">Introduce la clave de acceso:</p>
-            <input type="password" id="history-pass-input" placeholder="Contraseña...">
-            <button class="action-btn" style="background:var(--accent); color:#fff" onclick="submitHistoryPassword()">Ingresar</button>
-            <button class="action-btn" onclick="closeModal('password-modal')">Cancelar</button>
+            <h3>🔒 Clave de Historial</h3>
+            <input type="password" id="history-pass-input" placeholder="Ingresa contraseña...">
+            <button id="send-btn" onclick="submitHistoryPassword()">Acceder</button>
+            <button class="icon-btn" onclick="closeModal('password-modal')">Cancelar</button>
         </div>
     </div>
 
     <div id="poll-modal" class="modal">
         <div class="modal-body">
-            <h3>📊 Crear Encuesta Express</h3>
+            <h3>📊 Encuesta Flash</h3>
             <input type="text" id="poll-q" placeholder="Pregunta...">
-            <input type="text" id="poll-opt1" placeholder="Opción 1">
-            <input type="text" id="poll-opt2" placeholder="Opción 2">
-            <button class="action-btn" style="background:var(--accent); color:#fff" onclick="submitPoll()">Publicar</button>
-            <button class="action-btn" onclick="closeModal('poll-modal')">Cerrar</button>
+            <input type="text" id="poll-opt1" placeholder="Opción A">
+            <input type="text" id="poll-opt2" placeholder="Opción B">
+            <button id="send-btn" onclick="submitPoll()">Lanzar Encuesta</button>
+            <button class="icon-btn" onclick="closeModal('poll-modal')">Cerrar</button>
         </div>
     </div>
 
     <div id="whiteboard-modal" class="modal">
         <div class="modal-body" style="width:auto">
-            <h3>🎨 Pizarra Colaborativa</h3>
-            <canvas id="canvas-board" width="380" height="260" style="background:#fff; border-radius:10px; cursor:crosshair"></canvas>
-            <div style="display:flex; gap:8px">
-                <button class="action-btn" style="background:var(--accent-green); color:#fff" onclick="sendDrawing()">Compartir</button>
-                <button class="action-btn" onclick="clearCanvas()">Limpiar</button>
-                <button class="action-btn" onclick="closeModal('whiteboard-modal')">Cerrar</button>
+            <h3>🎨 Pizarra Digital</h3>
+            <canvas id="canvas-board" width="380" height="250" style="background:#fff; border-radius:12px; cursor:crosshair"></canvas>
+            <div style="display:flex; gap:10px">
+                <button id="send-btn" onclick="sendDrawing()">Compartir Dibujo</button>
+                <button class="icon-btn" onclick="closeModal('whiteboard-modal')">Cerrar</button>
             </div>
         </div>
     </div>
