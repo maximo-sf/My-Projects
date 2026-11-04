@@ -16,13 +16,16 @@
 
             <div class="sec-title">Canales</div>
             <ul class="nav-list">
-                <li><button class="nav-btn active" onclick="switchChannel('general')"># general</button></li>
+                <li><button class="nav-btn active" onclick="switchChannel('general')">💬 # general</button></li>
                 <li><button class="nav-btn" onclick="switchChannel('historial')">🔒 # historial</button></li>
             </ul>
 
-            <div class="sec-title">Canal de Voz</div>
+            <div class="sec-title">Canal de Voz en Vivo</div>
             <div class="voice-card">
                 <button id="voice-toggle-btn" class="voice-btn join" onclick="toggleVoice()">🎙️ Unirme a Voz</button>
+                <div id="voice-wave" class="voice-wave">
+                    <span></span><span></span><span></span>
+                </div>
                 <ul id="voice-users-list"></ul>
             </div>
 
@@ -30,8 +33,8 @@
             <ul id="user-list"></ul>
 
             <div class="sec-title">Herramientas</div>
-            <button class="action-btn" style="width:100%" onclick="openModal('poll-modal')">📊 Encuesta</button>
-            <button class="action-btn" style="width:100%" onclick="openModal('whiteboard-modal')">🎨 Pizarra</button>
+            <button class="action-btn" style="width:100%" onclick="openModal('poll-modal')">📊 Crear Encuesta</button>
+            <button class="action-btn" style="width:100%" onclick="openModal('whiteboard-modal')">🎨 Pizarra Dibujo</button>
         </aside>
 
         <main id="chat-main">
@@ -40,17 +43,15 @@
                 <div id="pinned-bar">📌 <span id="pinned-text"></span></div>
             </header>
 
-            <section id="chat-messages"></section>
+            <section id="chat-messages">
+                <!-- Welcome card se carga si está vacío -->
+            </section>
 
             <div id="typing-indicator"></div>
 
             <footer id="chat-footer">
-                <div id="reply-bar">
-                    <span id="reply-target-text"></span>
-                    <button onclick="cancelReply()" style="background:none; border:none; color:var(--accent-red); cursor:pointer;">✕</button>
-                </div>
                 <form id="message-form">
-                    <input type="text" id="message-input" placeholder="Escribe un mensaje..." autocomplete="off" required>
+                    <input type="text" id="message-input" placeholder="Escribe un mensaje en el canal..." autocomplete="off" required>
                     <input type="file" id="file-input" style="display:none">
                     <button type="button" class="action-btn" onclick="document.getElementById('file-input').click()">📎</button>
                     <button type="submit" class="action-btn" id="send-btn">Enviar</button>
@@ -62,7 +63,8 @@
     <!-- Modales -->
     <div id="password-modal" class="modal">
         <div class="modal-body">
-            <h3>🔒 Acceso Restringido</h3>
+            <h3>🔒 Canal Historial</h3>
+            <p style="font-size:0.85rem; color:var(--text-sub)">Introduce la clave de acceso:</p>
             <input type="password" id="history-pass-input" placeholder="Contraseña...">
             <button class="action-btn" style="background:var(--accent); color:#fff" onclick="submitHistoryPassword()">Ingresar</button>
             <button class="action-btn" onclick="closeModal('password-modal')">Cancelar</button>
@@ -71,21 +73,21 @@
 
     <div id="poll-modal" class="modal">
         <div class="modal-body">
-            <h3>📊 Nueva Encuesta</h3>
+            <h3>📊 Crear Encuesta Express</h3>
             <input type="text" id="poll-q" placeholder="Pregunta...">
             <input type="text" id="poll-opt1" placeholder="Opción 1">
             <input type="text" id="poll-opt2" placeholder="Opción 2">
-            <button class="action-btn" style="background:var(--accent); color:#fff" onclick="submitPoll()">Crear</button>
+            <button class="action-btn" style="background:var(--accent); color:#fff" onclick="submitPoll()">Publicar</button>
             <button class="action-btn" onclick="closeModal('poll-modal')">Cerrar</button>
         </div>
     </div>
 
     <div id="whiteboard-modal" class="modal">
         <div class="modal-body" style="width:auto">
-            <h3>🎨 Pizarra Dibujo</h3>
-            <canvas id="canvas-board" width="380" height="260" style="background:#fff; border-radius:8px; cursor:crosshair"></canvas>
+            <h3>🎨 Pizarra Colaborativa</h3>
+            <canvas id="canvas-board" width="380" height="260" style="background:#fff; border-radius:10px; cursor:crosshair"></canvas>
             <div style="display:flex; gap:8px">
-                <button class="action-btn" style="background:var(--accent-green); color:#fff" onclick="sendDrawing()">Enviar</button>
+                <button class="action-btn" style="background:var(--accent-green); color:#fff" onclick="sendDrawing()">Compartir</button>
                 <button class="action-btn" onclick="clearCanvas()">Limpiar</button>
                 <button class="action-btn" onclick="closeModal('whiteboard-modal')">Cerrar</button>
             </div>
