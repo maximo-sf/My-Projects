@@ -2,25 +2,53 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-// Configuración de multer
+// 1. Garantizar la existencia de la carpeta de subidas al arrancar
+const uploadDir = path.join(__dirname, 'public', 'uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// 2. Configuración de multer blindada
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, 'public/uploads/'),
-    filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
+    destination: (req, file, cb) => cb(null, uploadDir),
+    filename: (req, file, cb) => {
+        // Limpiamos el nombre original para evitar caracteres raros
+        const safeName = file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
+        cb(null, Date.now() + '-' + safeName);
+    }
 });
-const upload = multer({ storage });
+const upload = multer({ 
+    storage,
+    limits: { fileSize: 50 * 1024 * 1024 } // Límite de 50MB por archivo
+});
 
-app.use(express.static('public'));
+// Servir estáticos
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(uploadDir));
 
-app.post('/api/upload', upload.single('file'), (req, res) => {
-    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-    res.json({
-        fileName: req.file.originalname,
-        fileUrl: `/uploads/${req.file.filename}`
+// Endpoint de subida de archivos
+app.post('/api/upload', (req, res) => {
+    upload.single('file')(req, res, (err) => {
+        if (err instanceof multer.MulterError) {
+            return res.status(400).json({ error: `Error de Multer: ${err.message}` });
+        } else if (err) {
+            return res.status(500).json({ error: `Error en el servidor: ${err.message}` });
+        }
+        if (!req.file) {
+            return res.status(400).json({ error: 'No se recibió ningún archivo' });
+        }
+
+        res.json({
+            fileName: req.file.originalname,
+            fileUrl: `/uploads/${req.file.filename}`
+        });
     });
 });
 
@@ -35,13 +63,12 @@ const channelHistories = {
 };
 
 // Registro de usuarios conectados
-const connectedUsers = new Map(); // socket.id -> { username, channel }
+const connectedUsers = new Map();
 const activePolls = {};
 let pinnedMessage = null;
 
 function broadcastUsersList() {
     const usersArray = Array.from(connectedUsers.values()).map(u => u.username);
-    // Eliminar duplicados si un usuario tiene varias pestañas
     const uniqueUsers = [...new Set(usersArray)];
     io.emit('update-user-list', uniqueUsers);
 }
@@ -101,7 +128,7 @@ io.on('connection', (socket) => {
             text: data.text,
             channel: currentChannel,
             replyTo: data.replyTo || null,
-            reactions: {}, // { "👍": ["User1", "User2"] }
+            reactions: {},
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         };
         
@@ -122,11 +149,9 @@ io.on('connection', (socket) => {
 
             const userIndex = msg.reactions[emoji].indexOf(currentUser);
             if (userIndex > -1) {
-                // Quitar reacción si ya existía
                 msg.reactions[emoji].splice(userIndex, 1);
                 if (msg.reactions[emoji].length === 0) delete msg.reactions[emoji];
             } else {
-                // Añadir reacción
                 msg.reactions[emoji].push(currentUser);
             }
 
@@ -219,7 +244,7 @@ io.on('connection', (socket) => {
         io.to(currentChannel).emit('receive-media', payload);
     });
 
-    // Desconexión de usuario
+    // Desconexión
     socket.on('disconnect', () => {
         if (connectedUsers.has(socket.id)) {
             connectedUsers.delete(socket.id);
