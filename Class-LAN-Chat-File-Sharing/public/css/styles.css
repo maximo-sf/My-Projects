@@ -313,26 +313,38 @@ body {
     z-index: 10;
 }
 
-/* Asegura que el contenedor del mensaje ordene bien los elementos */
+/* Ajuste de la caja contenedora del mensaje */
 .msg-box {
     position: relative;
     display: flex;
     flex-direction: column;
+    padding: 10px 14px;
+    font-size: 0.85rem; /* Tamaño de fuente del texto del mensaje más chiquitito */
 }
 
-/* Barra de reacciones integrada en la parte inferior del mensaje */
+/* Metadatos (Nombre y hora) más discretos */
+.msg-meta {
+    display: flex;
+    gap: 8px;
+    font-size: 0.70rem; /* Tamaño más pequeño para usuario y hora */
+    opacity: 0.7;
+    margin-bottom: 4px;
+}
+
+/* Barra de reacciones colocada ABAJO del texto */
 .msg-actions {
-    position: static !important; /* Elimina el posicionamiento fuera de la caja */
+    position: static !important; /* Quita el posicionamiento flotante arriba */
     display: flex !important;
-    gap: 6px;
-    margin-top: 8px;
-    padding: 2px 0;
+    gap: 4px;
+    margin-top: 8px; /* Espaciado con respecto al texto de arriba */
+    align-self: flex-start; /* Alinea los emojis abajo a la izquierda */
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
+    padding: 0 !important;
 }
 
-/* Estilo transparente y limpio para los botones de emoji */
+/* Emojis con tamaño ajustado y transparentes */
 .msg-actions .react-btn,
 .react-btn {
     background: transparent !important;
@@ -341,7 +353,7 @@ body {
     box-shadow: none !important;
     padding: 2px 4px !important;
     cursor: pointer;
-    font-size: 1.05rem;
+    font-size: 0.95rem; /* Tamaño de los emojis más fino */
     line-height: 1;
     transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: inline-flex;
@@ -350,7 +362,7 @@ body {
 }
 
 .react-btn:hover {
-    transform: scale(1.3) translateY(-2px);
+    transform: scale(1.25) translateY(-1px);
 }
 
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
