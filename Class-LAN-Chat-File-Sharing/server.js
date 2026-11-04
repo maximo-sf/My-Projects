@@ -3,222 +3,190 @@ const http = require('http');
 const { Server } = require('socket.io');
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-const uploadDir = path.join(__dirname, 'public', 'uploads');
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
-
+// Configuración de subida de archivos
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, uploadDir),
-    filename: (req, file, cb) => {
-        const safeName = file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
-        cb(null, Date.now() + '-' + safeName);
-    }
+    destination: (req, file, cb) => cb(null, 'public/uploads/'),
+    filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
 });
-const upload = multer({ storage, limits: { fileSize: 50 * 1024 * 1024 } });
+const upload = multer({ storage });
 
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/uploads', express.static(uploadDir));
+app.use(express.static('public'));
+app.use(express.json());
 
-app.post('/api/upload', (req, res) => {
-    upload.single('file')(req, res, (err) => {
-        if (err) return res.status(500).json({ error: err.message });
-        if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-        res.json({
-            fileName: req.file.originalname,
-            fileUrl: `/uploads/${req.file.filename}`
-        });
-    });
+app.post('/api/upload', upload.single('file'), (req, res) => {
+    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+    res.json({ fileName: req.file.originalname, fileUrl: `/uploads/${req.file.filename}` });
 });
 
-const SECRET_HISTORY_PASSWORD = 'admin';
-const channels = ['general', 'historial'];
-
-const channelHistories = {
-    general: [],
-    historial: []
-};
-
-const connectedUsers = new Map();
+// Estructuras de datos globales en memoria
+const users = {};
+const channels = { general: [], historial: [] };
 const voiceUsers = new Set();
-const activePolls = {};
-let pinnedMessage = null;
-
-function broadcastUsersList() {
-    const usersArray = Array.from(connectedUsers.values()).map(u => u.username);
-    io.emit('update-user-list', [...new Set(usersArray)]);
-}
-
-function broadcastVoiceList() {
-    io.emit('update-voice-list', Array.from(voiceUsers));
-}
+const activePolls = {}; 
+const messageReactions = {}; // Registro: { msgId: { socketId: [ '👍', '❤️' ] } }
 
 io.on('connection', (socket) => {
-    let currentUser = 'Anónimo';
     let currentChannel = 'general';
 
-    socket.join(currentChannel);
-
+    // 1. Registro de usuario
     socket.on('user-join', (username) => {
-        currentUser = username;
-        socket.username = username;
-        connectedUsers.set(socket.id, { username, channel: currentChannel });
-        io.emit('system-notification', `${currentUser} se ha conectado.`);
-        broadcastUsersList();
-        broadcastVoiceList();
+        users[socket.id] = {
+            id: socket.id,
+            username: username || 'Estudiante',
+            status: '🟢'
+        };
+        socket.join(currentChannel);
+        
+        socket.emit('channel-switched', { channel: currentChannel, history: channels[currentChannel] || [] });
+        io.emit('update-user-list', Object.values(users));
+        io.emit('update-voice-list', Array.from(voiceUsers));
     });
 
-    socket.on('switch-channel', (data) => {
-        const targetChannel = typeof data === 'string' ? data : data.channel;
-        if (targetChannel === 'historial' && data.password !== SECRET_HISTORY_PASSWORD) {
-            return socket.emit('access-denied', 'Contraseña incorrecta.');
+    // 2. Sincronización de estado
+    socket.on('update-status', (statusEmoji) => {
+        if (!users[socket.id]) {
+            users[socket.id] = { id: socket.id, username: 'Estudiante', status: statusEmoji };
+        } else {
+            users[socket.id].status = statusEmoji;
         }
-
-        if (channels.includes(targetChannel)) {
-            socket.leave(currentChannel);
-            currentChannel = targetChannel;
-            socket.join(currentChannel);
-
-            socket.emit('channel-switched', { 
-                channel: currentChannel, 
-                pinnedMessage,
-                history: targetChannel === 'historial' ? channelHistories.historial : channelHistories[targetChannel]
-            });
-        }
+        io.emit('update-user-list', Object.values(users));
     });
 
-    socket.on('send-message', (data) => {
-        const payload = {
-            type: 'text',
-            id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
-            user: currentUser,
-            text: data.text,
-            replyTo: data.replyTo || null,
-            reactions: {},
+    // 3. Canales
+    socket.on('switch-channel', ({ channel, password }) => {
+        if (channel === 'historial' && password !== '1234') {
+            return socket.emit('system-notification', '⚠️ Contraseña incorrecta.');
+        }
+        socket.leave(currentChannel);
+        currentChannel = channel;
+        socket.join(currentChannel);
+        socket.emit('channel-switched', { channel: currentChannel, history: channels[currentChannel] || [] });
+    });
+
+    // 4. Mensajería
+    socket.on('send-message', ({ text }) => {
+        const userObj = users[socket.id];
+        if (!userObj) return;
+        const msgData = {
+            id: Date.now().toString(),
+            user: userObj.username,
+            text,
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         };
-        if (channelHistories[currentChannel]) channelHistories[currentChannel].push(payload);
-        channelHistories.historial.push(payload);
-        io.to(currentChannel).emit('receive-message', payload);
+        if (channels[currentChannel]) channels[currentChannel].push(msgData);
+        io.to(currentChannel).emit('receive-message', msgData);
     });
 
+    // 5. Reacciones a mensajes (Límite: 1 reacción de cada emoji por usuario)
     socket.on('react-message', ({ msgId, emoji }) => {
-        const history = channelHistories[currentChannel] || [];
-        const msg = history.find(m => m.id === msgId) || channelHistories.historial.find(m => m.id === msgId);
-        if (msg) {
-            if (!msg.reactions) msg.reactions = {};
-            if (!msg.reactions[emoji]) msg.reactions[emoji] = [];
-
-            const idx = msg.reactions[emoji].indexOf(currentUser);
-            if (idx > -1) {
-                msg.reactions[emoji].splice(idx, 1);
-                if (msg.reactions[emoji].length === 0) delete msg.reactions[emoji];
-            } else {
-                msg.reactions[emoji].push(currentUser);
-            }
-            io.to(currentChannel).emit('update-message-reactions', { msgId, reactions: msg.reactions });
+        if (!messageReactions[msgId]) {
+            messageReactions[msgId] = {};
         }
+        if (!messageReactions[msgId][socket.id]) {
+            messageReactions[msgId][socket.id] = new Set();
+        }
+
+        const userEmojis = messageReactions[msgId][socket.id];
+
+        // Verificar si el usuario ya usó este emoji específico en este mensaje
+        if (userEmojis.has(emoji)) {
+            return socket.emit('system-notification', `⚠️ Ya has reaccionado con ${emoji} a este mensaje.`);
+        }
+
+        userEmojis.add(emoji);
+        
+        io.to(currentChannel).emit('message-reaction', { 
+            msgId, 
+            emoji, 
+            user: users[socket.id]?.username 
+        });
     });
 
-    socket.on('pin-message', (text) => {
-        pinnedMessage = { user: currentUser, text };
-        io.emit('update-pinned', pinnedMessage);
-    });
-
-    socket.on('typing', (isTyping) => {
-        socket.to(currentChannel).emit('user-typing', { user: currentUser, isTyping });
-    });
-
-    socket.on('send-media', (data) => {
-        const payload = {
-            type: 'media',
-            id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
-            user: currentUser,
-            url: data.url,
-            reactions: {},
-            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    // 6. Encuestas Flash
+    socket.on('create-poll', ({ question, options }) => {
+        const pollId = 'poll-' + Date.now();
+        const pollData = {
+            id: pollId,
+            question,
+            options: options.map(opt => ({ text: opt, votes: 0 })),
+            voters: []
         };
-        if (channelHistories[currentChannel]) channelHistories[currentChannel].push(payload);
-        channelHistories.historial.push(payload);
-        io.to(currentChannel).emit('receive-media', payload);
-    });
-
-    socket.on('share-file', (data) => {
-        const payload = {
-            type: 'file',
-            id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
-            user: currentUser,
-            fileName: data.fileName,
-            fileUrl: data.fileUrl,
-            reactions: {},
-            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        };
-        if (channelHistories[currentChannel]) channelHistories[currentChannel].push(payload);
-        channelHistories.historial.push(payload);
-        io.to(currentChannel).emit('receive-file', payload);
-    });
-
-    socket.on('create-poll', (pollData) => {
-        const pollId = 'poll_' + Date.now();
-        activePolls[pollId] = { question: pollData.question, options: pollData.options.map(opt => ({ text: opt, votes: 0 })), votedUsers: [] };
-        io.to(currentChannel).emit('receive-poll', { id: pollId, ...activePolls[pollId] });
+        activePolls[pollId] = pollData;
+        io.to(currentChannel).emit('receive-poll', pollData);
     });
 
     socket.on('vote-poll', ({ pollId, optionIndex }) => {
         const poll = activePolls[pollId];
-        if (poll && !poll.votedUsers.includes(currentUser)) {
-            poll.options[optionIndex].votes++;
-            poll.votedUsers.push(currentUser);
-            io.emit('update-poll', { id: pollId, poll });
+        if (!poll) return;
+
+        if (poll.voters.includes(socket.id)) {
+            return socket.emit('system-notification', '⚠️ Ya has votado en esta encuesta.');
+        }
+
+        if (poll.options[optionIndex]) {
+            poll.options[optionIndex].votes += 1;
+            poll.voters.push(socket.id);
+            io.emit('update-poll-data', poll);
         }
     });
 
+    // 7. Pizarra Digital
     socket.on('share-drawing', (dataUrl) => {
-        const payload = {
+        const msgData = {
+            id: Date.now().toString(),
+            user: users[socket.id]?.username || 'Anónimo',
             type: 'media',
-            id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
-            user: currentUser,
             url: dataUrl,
-            reactions: {},
             timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         };
-        if (channelHistories[currentChannel]) channelHistories[currentChannel].push(payload);
-        channelHistories.historial.push(payload);
-        io.to(currentChannel).emit('receive-media', payload);
+        if (channels[currentChannel]) channels[currentChannel].push(msgData);
+        io.to(currentChannel).emit('receive-media', msgData);
     });
 
-    // WebRTC Voz
+    // 8. Subida de archivos
+    socket.on('share-file', (fileData) => {
+        const msgData = {
+            id: Date.now().toString(),
+            user: users[socket.id]?.username || 'Anónimo',
+            type: 'file',
+            fileName: fileData.fileName,
+            fileUrl: fileData.fileUrl,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+        if (channels[currentChannel]) channels[currentChannel].push(msgData);
+        io.to(currentChannel).emit('receive-file', msgData);
+    });
+
+    // 9. Sala de voz P2P
     socket.on('join-voice', () => {
-        voiceUsers.add(currentUser);
-        socket.join('voice-room');
-        broadcastVoiceList();
-        socket.to('voice-room').emit('user-connected-voice', socket.id);
+        if (users[socket.id]) {
+            voiceUsers.add(users[socket.id].username);
+            io.emit('update-voice-list', Array.from(voiceUsers));
+        }
     });
 
     socket.on('leave-voice', () => {
-        voiceUsers.delete(currentUser);
-        socket.leave('voice-room');
-        broadcastVoiceList();
-        socket.to('voice-room').emit('user-disconnected-voice', socket.id);
+        if (users[socket.id]) {
+            voiceUsers.delete(users[socket.id].username);
+            io.emit('update-voice-list', Array.from(voiceUsers));
+        }
     });
 
-    socket.on('webrtc-offer', ({ target, offer }) => socket.to(target).emit('webrtc-offer', { sender: socket.id, offer }));
-    socket.on('webrtc-answer', ({ target, answer }) => socket.to(target).emit('webrtc-answer', { sender: socket.id, answer }));
-    socket.on('webrtc-ice', ({ target, candidate }) => socket.to(target).emit('webrtc-ice', { sender: socket.id, candidate }));
-
+    // 10. Desconexión
     socket.on('disconnect', () => {
-        connectedUsers.delete(socket.id);
-        voiceUsers.delete(currentUser);
-        broadcastUsersList();
-        broadcastVoiceList();
+        if (users[socket.id]) {
+            voiceUsers.delete(users[socket.id].username);
+            delete users[socket.id];
+            io.emit('update-user-list', Object.values(users));
+            io.emit('update-voice-list', Array.from(voiceUsers));
+        }
     });
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, '0.0.0.0', () => console.log(`Servidor activo en http://localhost:${PORT}`));
+server.listen(PORT, () => console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`));
