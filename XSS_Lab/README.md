@@ -8,26 +8,38 @@
 ![Security](https://img.shields.io/badge/Security-XSS_Lab-red?style=for-the-badge&logo=imperva&logoColor=white)
 
 <p align="center">
-  <b>Un entorno de entrenamiento local e interactivo para comprender y prevenir vulnerabilidades de tipo Cross-Site Scripting (XSS Reflejado/DOM-based).</b>
+  <b>A local, interactive training environment to understand and prevent Cross-Site Scripting (Reflected/DOM-based XSS) vulnerabilities.</b>
 </p>
 
 </div>
 
 ---
 
-## 📌 ¿De qué trata este laboratorio?
+## 📌 What is this lab about?
 
-**CampusBoard** es una demostración didáctica orientada a la ciberseguridad web. Permite observar en tiempo real la diferencia fundamental entre renderizar entradas de usuario de forma **insegura** (`innerHTML`) frente a procesarlas de forma **segura** (`textContent`).
+**CampusBoard** is an educational web security demonstration. It allows you to observe in real-time the key difference between rendering user input **insecurely** (`innerHTML`) versus processing it **securely** (`textContent`).
 
-> 🔒 **100% Seguro & Local:** Este laboratorio corre exclusivamente en el navegador. No realiza peticiones de red, no utiliza cookies, no guarda datos en servidores ni persiste información.
+> 🔒 **100% Safe & Local:** This lab runs exclusively in your browser. It makes no network requests, uses no cookies, stores no data on servers, and does not persist information.
 
 ---
 
-## 🛠️ Tecnologías y Estructura
+## 🎓 How the Lab Works
 
-El proyecto ha sido refactorizado para seguir las mejores prácticas de desarrollo web, separando la capa de estructura, diseño y lógica:
+When testing user input in web applications, the method used to insert text into the Document Object Model (DOM) determines whether code executes or displays safely:
 
-```text
-├── index.html     # Estructura semántica de la aplicación
-├── styles.css     # Estilos en modo oscuro con variables CSS
-└── script.js      # Lógica interactiva y manipulaciones del DOM
+1. **Unsafe Button (`innerHTML`):** 
+   * Treats user input as HTML markup. 
+   * If a user submits executable code (such as `<script>` tags or inline event handlers), the browser parses and executes it as live code.
+2. **Safe Button (`textContent`):** 
+   * Treats user input purely as plain text. 
+   * Special characters like `<` and `>` are escaped automatically, ensuring scripts are displayed literally and never executed.
+
+---
+
+## 🧪 Injection Payloads & Test Scripts
+
+You can copy and paste any of the following payload examples into the comment box to test how the browser reacts with both buttons:
+
+### 1. Basic Script Tag Injection
+```html
+<script>alert('XSS Demo Triggered!');</script>
