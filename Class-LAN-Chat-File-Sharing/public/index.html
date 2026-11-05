@@ -36,13 +36,23 @@
 
             <section id="chat-messages"></section>
 
+            <!-- PIE DE CHAT CON BOTONES INTEGRADOS -->
             <footer id="chat-footer">
                 <form id="message-form">
                     <div id="input-bar">
-                        <button type="button" class="icon-btn" onclick="document.getElementById('file-input').click()">📎</button>
-                        <input type="text" id="message-input" placeholder="Escribe un mensaje..." autocomplete="off" required>
-                        <input type="file" id="file-input" style="display:none">
-                        <button type="submit" id="send-btn">Enviar ⚡</button>
+                        <!-- Botón personalizado para adjuntar archivo -->
+                        <label class="file-btn-wrapper dock-btn" style="width:38px; height:38px; border-radius:10px; cursor:pointer;" title="Adjuntar archivo">
+                            📎
+                            <input type="file" id="file-input" style="display:none;">
+                        </label>
+
+                        <!-- Campo de texto -->
+                        <input type="text" id="message-input" placeholder="Escribe un mensaje..." autocomplete="off">
+
+                        <!-- Botón de enviar integrado -->
+                        <button type="submit" id="send-btn" class="btn-primary" style="padding: 8px 16px; border-radius:10px;">
+                            Enviar ⚡
+                        </button>
                     </div>
                 </form>
             </footer>
@@ -74,13 +84,15 @@
 </aside>
     </div>
 
-    <!-- Modales -->
+<!-- Ejemplo para Modal Clave de Historial -->
     <div id="password-modal" class="modal">
         <div class="modal-body">
-            <h3>🔒 Clave de Historial</h3>
+            <h3 style="font-size:1.1rem; color:var(--text-primary)">🔒 Clave de Historial</h3>
             <input type="password" id="history-pass-input" placeholder="Ingresa contraseña...">
-            <button id="send-btn" onclick="submitHistoryPassword()">Acceder</button>
-            <button class="icon-btn" onclick="closeModal('password-modal')">Cancelar</button>
+            <div style="display:flex; gap:10px; justify-content:flex-end;">
+                <button type="button" class="btn-secondary" onclick="closeModal('password-modal')">Cancelar</button>
+                <button type="button" class="btn-primary" onclick="submitHistoryPassword()">Acceder</button>
+            </div>
         </div>
     </div>
 
