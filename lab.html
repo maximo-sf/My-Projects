@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CampusBoard — Local XSS Training Lab</title>
+  <link rel="stylesheet" href="lab.css">
+</head>
+<body>
+  <main>
+    <div class="tag">LOCAL TRAINING ENVIRONMENT / NO NETWORK</div>
+    <h1>CampusBoard<br> XSS Demonstration</h1>
+    <p>This fictional comment wall demonstrates the difference between unsafe HTML insertion and safe text rendering. It runs only in this browser tab.</p>
+    
+    <section class="card">
+      <h2>Post a comment</h2>
+      <label for="comment">Comment text</label>
+      <textarea id="comment" placeholder="Try the harmless training payload shown below..."></textarea>
+      <p class="note">Harmless payload: <code>&lt;script&gt;alert('XSS demo');&lt;/script&gt;</code></p>
+      <button class="unsafe" id="unsafeBtn">Post comment (unsafe)</button>
+      <button class="safe" id="safeBtn">Post comment (safe)</button>
+      <div id="wall" aria-live="polite"><span class="note">Your comments will appear here.</span></div>
+    </section>
+
+    <section class="card">
+      <h2>What should happen?</h2>
+      <p><strong style="color:var(--red)">Unsafe button:</strong> uses <code>innerHTML</code>. The browser interprets the supplied value as markup. The demonstration payload triggers a simple alert.</p>
+      <p><strong style="color:var(--green)">Safe button:</strong> uses <code>textContent</code>. The same input is displayed literally and does not execute.</p>
+      <p class="note">This lab does not transmit data, read cookies, access credentials, contact a server, or persist comments. Refreshing the page clears the wall. Use only for local education.</p>
+    </section>
+  </main>
+
+  <script src="lab.js"></script>
+</body>
+</html>
